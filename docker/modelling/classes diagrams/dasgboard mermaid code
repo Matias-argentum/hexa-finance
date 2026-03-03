@@ -1,0 +1,31 @@
+classDiagram
+    direction LR
+
+    class DashboardSummary {
+        <<Record>>
+        -BigDecimal totalIncomes
+        -BigDecimal totalExpenses
+        -BigDecimal balance
+        -int month
+        -int year
+    }
+
+    class GetDashboardSummaryUseCase {
+        <<Interface>>
+        +execute(int month, int year) DashboardSummary
+    }
+
+    class DashboardService {
+        -TransactionRepositoryPort transactionRepo
+        +execute(int month, int year) DashboardSummary
+    }
+
+    class TransactionRepositoryPort {
+        <<Interface>>
+        +sumAmountsByMonth(Long userId, int month, int year, TypeEnum type) BigDecimal
+    }
+
+    %% Relaciones
+    DashboardService ..|> GetDashboardSummaryUseCase
+    DashboardService --> TransactionRepositoryPort : "pide sumas del mes"
+    DashboardService ..> DashboardSummary : "crea"

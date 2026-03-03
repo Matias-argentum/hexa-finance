@@ -1,0 +1,62 @@
+classDiagram
+    direction LR
+
+    class TransactionFilter {
+        <<Record>>
+        -LocalDate from
+        -LocalDate to
+        -TypeEnum type
+        -List~Long~ categoryIds
+        -String description
+        -int page
+        -int size
+    }
+
+    class CreateTransactionCommand {
+        <<Record>>
+        -BigDecimal amount
+        -String description
+        -TypeEnum type
+        -Long categoryId
+        -LocalDate date
+    }
+
+    class TransactionUseCase {
+        <<Interface>>
+        +create(CreateTransactionCommand command) void
+        +search(TransactionFilter filter) List~Transaction~
+        +delete(Long id) void
+        +update(Long id, CreateTransactionCommand command) void
+    }
+
+    class TransactionService {
+        -TransactionRepositoryPort repository
+        -CategoryRepositoryPort categoryRepository
+        +create(CreateTransactionCommand command) void
+        +search(TransactionFilter filter) List~Transaction~
+    }
+
+    class Transaction {
+        -Long id
+        -BigDecimal amount
+        -String description
+        -TypeEnum type
+        -Long categoryId
+        -LocalDate date
+        -Long userId
+    }
+
+    class TransactionRepositoryPort {
+        <<Interface>>
+        +save(Transaction t) void
+        +findByFilters(TransactionFilter f) List~Transaction~
+        +findById(Long id) Transaction
+        +deleteById(Long id) void
+    }
+
+    %% Relaciones
+    TransactionFilter ..> TransactionUseCase : "se usa para buscar"
+    CreateTransactionCommand ..> TransactionUseCase : "se usa para crear/editar"
+    TransactionService ..|> TransactionUseCase
+    TransactionService --> TransactionRepositoryPort
+    TransactionService --> Transaction : "gestiona"

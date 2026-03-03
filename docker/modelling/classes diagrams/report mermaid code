@@ -1,0 +1,53 @@
+classDiagram
+    direction LR
+
+    class ReportQuery {
+        <<Record>>
+        -LocalDate from
+        -LocalDate to
+        -List~Long~ categoryIds
+    }
+
+    class CategorySummary {
+        <<Record>>
+        -String categoryName
+        -BigDecimal total
+    }
+
+    class FinancialReport {
+        <<Record>>
+        -List~CategorySummary~ breakdown
+        -BigDecimal grandTotal
+    }
+
+    class GenerateReportUseCase {
+        <<Interface>>
+        +generate(ReportQuery query) FinancialReport
+    }
+
+    class ReportService {
+        -TransactionRepositoryPort transactionRepo
+        -CategoryRepositoryPort categoryRepo
+        +generate(ReportQuery query) FinancialReport
+    }
+
+    %% AQUÍ DEFINIMOS LOS REPOSITORIOS PARA QUE NO SALGAN VACÍOS
+    class TransactionRepositoryPort {
+        <<Interface>>
+        +findByFilters(TransactionFilter f) List~Transaction~
+    }
+
+    class CategoryRepositoryPort {
+        <<Interface>>
+        +findById(Long id) Category
+    }
+
+    %% Relaciones corregidas
+    ReportQuery ..> GenerateReportUseCase : "parámetro"
+    ReportService ..|> GenerateReportUseCase : "implementa"
+    
+    ReportService --> TransactionRepositoryPort : "pide movimientos"
+    ReportService --> CategoryRepositoryPort : "pide nombres"
+    
+    ReportService ..> FinancialReport : "crea"
+    FinancialReport *-- CategorySummary : "lista de"

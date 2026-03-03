@@ -1,0 +1,6 @@
+COMANDO	                        FUNCION
+docker compose up -d        |	Levanta todo en segundo plano (modo "detached").
+docker compose ps           |	Lista los contenedores de este proyecto y su estado.
+docker compose logs -f      |	Muestra los logs (errores) de la DB o la App en tiempo real.
+docker compose restart      |	Reinicia los servicios (útil si cambias algo de la DB).
+docker compose down	        |   Limpia todo el entorno del proyecto.

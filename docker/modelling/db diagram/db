@@ -1,0 +1,33 @@
+Table users {
+  id integer [primary key]
+  email varchar [unique]
+  username varchar
+  password varchar
+  role varchar // O una tabla 'roles' aparte si hay poner varios roles por user
+  created_at timestamp
+  active boolean
+must_change_password default false
+}
+
+Table categories {
+  id integer [primary key]
+  name varchar
+  user_id integer [null] // si es NULL es pq es categoría "Global"
+  icon varchar // se pueden guardar iconos de tabler icons? 
+  color varchar
+}
+
+Table transactions {
+  id integer [primary key]
+  description varchar
+  amount decimal
+  type varchar // 'INCOME' o 'EXPENSE'
+  user_id integer
+  category_id integer
+  date timestamp
+}
+
+// Relaciones ( < significa "Muchos a Uno" )
+Ref: transactions.user_id > users.id
+Ref: transactions.category_id > categories.id
+Ref: categories.user_id > users.id

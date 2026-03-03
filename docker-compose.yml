@@ -1,0 +1,48 @@
+services:
+  mysql-db:
+    image: mysql:9.0
+    container_name: finance-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: finance_db
+      MYSQL_USER: user_dev
+      MYSQL_PASSWORD: pass_dev
+    ports:
+      - "3306:3306"
+    volumes:
+      # Los datos NO se suben a GitHub (usa .gitignore)
+      - ./docker/mysql_data:/var/lib/mysql
+    networks:
+      - finance-network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: finance-admin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql-db
+    depends_on:
+      - mysql-db
+    networks:
+      - finance-network
+
+  # Este servicio lo usaremos cuando ya tengas código para compilar
+  app:
+    build: ./hexa-finance
+    container_name: hexa-finance-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/finance_db
+      - SPRING_DATASOURCE_USERNAME=user_dev
+      - SPRING_DATASOURCE_PASSWORD=pass_dev
+    depends_on:
+      - mysql-db
+    networks:
+      - finance-network
+
+networks:
+  finance-network:
+    driver: bridge

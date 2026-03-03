@@ -1,0 +1,48 @@
+classDiagram
+    direction LR
+
+    class User {
+        -Long id
+        -String username
+        -String email
+        -String password
+        -RoleEnum role
+        -boolean active
+        -boolean forcePasswordChange
+        +toggleStatus() void
+        +resetPassword(String newEncodedPassword) void
+    }
+
+    class AdminUseCase {
+        <<Interface>>
+        +listAllUsers() List~User~
+        +toggleStatus(Long userId) boolean
+        +resetPassword(Long userId) String
+    }
+
+    class AdminService {
+        -UserRepositoryPort userRepo
+        -PasswordGeneratorService passGen
+        -PasswordEncoderPort passwordEncoder
+        +listAllUsers() List~User~
+        +toggleStatus(Long userId) boolean
+        +resetPassword(Long userId) String
+    }
+
+    class UserRepositoryPort {
+        <<Interface>>
+        +findAll() List~User~
+        +findById(Long id) Optional~User~
+        +save(User user) void
+    }
+
+    class PasswordGeneratorService {
+        <<Service>>
+        +generateRandom(int length) String
+    }
+
+    %% Relaciones
+    AdminService ..|> AdminUseCase : "implementa"
+    AdminService --> UserRepositoryPort : "persiste cambios"
+    AdminService --> PasswordGeneratorService : "usa para reset"
+    AdminService --> User : "modifica estado de"

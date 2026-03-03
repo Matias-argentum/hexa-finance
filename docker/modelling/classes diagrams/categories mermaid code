@@ -1,0 +1,46 @@
+classDiagram
+    direction LR
+
+    class CategoryCommand {
+        <<Record>>
+        -String name
+        -String iconName
+    }
+
+    class CategoryUseCase {
+        <<Interface>>
+        +create(CategoryCommand command) void
+        +update(Long id, CategoryCommand command) void
+        +delete(Long id) void
+        +findAllAvailable() List~Category~
+        +findById(Long id) Category
+    }
+
+    class CategoryService {
+        -CategoryRepositoryPort repository
+        +create(CategoryCommand command) void
+        +findAllAvailable() List~Category~
+    }
+
+    class Category {
+        -Long id
+        -String name
+        -String iconName
+        -Long userId
+        +isGlobal() boolean
+        +isOwnedBy(Long currentUserId) boolean
+    }
+
+    class CategoryRepositoryPort {
+        <<Interface>>
+        +save(Category category) void
+        +findById(Long id) Category
+        +findByUserOrGlobal(Long userId) List~Category~
+        +deleteById(Long id) void
+    }
+
+    %% Relaciones
+    CategoryCommand ..> CategoryUseCase : "datos para crear/editar"
+    CategoryService ..|> CategoryUseCase : "implementa"
+    CategoryService --> Category : "gestiona"
+    CategoryService --> CategoryRepositoryPort : "persiste en"

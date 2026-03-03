@@ -1,0 +1,25 @@
+### --- DOCKER & DATA --- ###
+# Ignoramos la carpeta de datos de MySQL (muy importante para no subir binarios)
+docker/docker/mysql_data/
+# Ignoramos archivos de variables de entorno (por seguridad en la VPS)
+.env
+*.env
+
+### --- JAVA & MAVEN --- ###
+# Ignora todas las carpetas target donde se compila el código
+**/target/
+# Archivos de Maven Wrapper (opcional, pero si no los usas mejor ignorarlos)
+**/mvnw
+**/mvnw.cmd
+**/.mvn/
+**/maven-wrapper.jar
+
+### --- IDEs & OS --- ###
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+### --- LOGS --- ###
+*.log
