@@ -1,0 +1,28 @@
+<div class="cat-card "
+     th:fragment="category-item"
+>
+    <i th:class="'ti ti-' + ${category.iconName}"></i>
+    <strong th:text="${category.name}"></strong>
+    <button class="outline secondary cat-button"
+            hx-delete="/categories/${category.id}"
+            hx-target="closest .category-card"
+            hx-swap="outerHTML">
+        <i class="ti ti-trash cat-icon-delete"></i>
+    </button>
+</div>
+
+<form hx-post="/categories"
+      hx-target="#categories-list"
+      hx-swap="beforeend"
+      hx-on::after-request="this.reset()"
+      th:fragment="category-form">
+    <label>
+        Category name
+        <input type="text" name="name" placeholder="Category name" required>
+    </label>
+    <label>
+        Icon Name
+        <input type="text" name="iconName" placeholder="Icon name (e.g. home, user)" required>
+    </label>
+    <button type="submit">Create Category</button>
+</form>

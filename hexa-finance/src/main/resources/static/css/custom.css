@@ -1,0 +1,62 @@
+/* ==========================================
+   1. GLOBAL LAYOUT
+   ========================================== */
+/* logo en main layout */
+   .main-logo{
+        max-width: 85px;
+        margin-bottom: 0.5rem;
+   }
+
+    
+/* ==========================================
+   2. WELCOME PAGE
+   ========================================== */
+/* Estilos para el logo y el centrado de bienvenida */
+
+    .welcome-section{
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        min-height: 70vh;
+        text-align: center;
+    }
+
+    .welcome-logo{
+        max-width: 200px; 
+        margin-bottom: 2rem;
+    }
+
+    .welcome-buttons-container-div{
+        margin-top: 2rem;
+    }
+
+/* ==========================================
+   3. CATEGORIES MODULE
+   ========================================== */
+/* Estilos para la card de categoría, el grid y los iconos */
+    .cat-button{
+    padding: 2px 5px; border: none;
+    }
+
+    .cat-card{
+    max-width: 50%;
+    height: 5rem;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 5px;
+    }
+
+    .cat-icon-delete{
+        color: white;
+    }
+
+    .cat-icon-delete:hover{
+        color: red;
+    }
+
+
+/* ==========================================
+   4. HTMX & ANIMATIONS
+   ========================================== */
+/* Clases para efectos cuando algo se está borrando o cargando */

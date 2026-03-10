@@ -1,4 +1,4 @@
-package com.mat.hexa_finance.infrastructure.adapters.out.persistence.category.dto;
+package com.mat.hexa_finance.infrastructure.adapters.in.web.category.dto;
 
 public record CategoryResponse(
         Long id,
