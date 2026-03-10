@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTMX + Pico CSS App</title>
+    <!-- Pico CSS for styling -->
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+    <!-- Tabler icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.35.0/tabler-icons.min.css" integrity="sha512-gzw5zNP2TRq+DKyAqZfDclaTG4dOrGJrwob2Fc8xwcJPDPVij0HowLIMZ8c1NefFM0OZZYUUUNoPfcoI5jqudw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- HTMX library -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+            integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<main class="container">
+    <form hx-post="/categories"
+          hx-target="#categories-list"
+          hx-swap="beforeend"
+          hx-on::after-request="this.reset()">
+        <label>
+            Category name
+            <input type="text" name="name" placeholder="Category name" required>
+        </label>
+        <label>
+            Icon Name
+            <input type="text" name="iconName" placeholder="Icon name (e.g. home, user)" required>
+        </label>
+        <button type="submit">Create Category</button>
+    </form>
+
+    <hr>
+
+    <div id="categories-list">
+    </div>
+</main>
+</body>
+</html>
