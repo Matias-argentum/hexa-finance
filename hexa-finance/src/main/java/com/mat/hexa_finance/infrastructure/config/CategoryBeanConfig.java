@@ -1,7 +1,7 @@
 package com.mat.hexa_finance.infrastructure.config;
 
-import com.mat.hexa_finance.application.ports.in.category.FindAllCategoriesUseCase;
-import com.mat.hexa_finance.application.ports.in.category.SaveCategoryUseCase;
+import com.mat.hexa_finance.application.ports.out.category.CheckCategoryPort;
+import com.mat.hexa_finance.application.ports.out.category.DeleteCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.LoadCategoriesPort;
 import com.mat.hexa_finance.application.ports.out.category.SaveCategoryPort;
 import com.mat.hexa_finance.application.service.CategoryService;
@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class CategoryBeanConfig {
 
     @Bean
-    public CategoryService categoryService(SaveCategoryPort savePort, LoadCategoriesPort loadPort) {
-        return new CategoryService(savePort, loadPort);
+    public CategoryService categoryService(SaveCategoryPort savePort, LoadCategoriesPort loadPort, DeleteCategoryPort deletePort, CheckCategoryPort checkPort) {
+        return new CategoryService(savePort, loadPort, checkPort, deletePort);
     }
 }
 

@@ -1,5 +1,7 @@
 package com.mat.hexa_finance.infrastructure.adapters.out.persistence.category;
 
+import com.mat.hexa_finance.application.ports.out.category.CheckCategoryPort;
+import com.mat.hexa_finance.application.ports.out.category.DeleteCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.LoadCategoriesPort;
 import com.mat.hexa_finance.application.ports.out.category.SaveCategoryPort;
 import com.mat.hexa_finance.domain.model.Category;
@@ -9,7 +11,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class CategoryPersisteneceAdapter implements SaveCategoryPort, LoadCategoriesPort {
+public class CategoryPersisteneceAdapter implements
+        SaveCategoryPort,
+        LoadCategoriesPort,
+        CheckCategoryPort,
+        DeleteCategoryPort {
 
     private final JpaCategoryRepository repository;
 
@@ -36,5 +42,15 @@ public class CategoryPersisteneceAdapter implements SaveCategoryPort, LoadCatego
         return foundCategories.stream()
                 .map(c -> new Category(c.getId(), c.getName(), c.getIconName(), c.getUserId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        repository.deleteById(id);
     }
 }

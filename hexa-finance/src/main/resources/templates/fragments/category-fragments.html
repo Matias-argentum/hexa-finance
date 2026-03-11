@@ -4,8 +4,9 @@
     <i th:class="'ti ti-' + ${category.iconName}"></i>
     <strong th:text="${category.name}"></strong>
     <button class="outline secondary cat-button"
-            hx-delete="/categories/${category.id}"
-            hx-target="closest .category-card"
+            th:hx-delete="@{/categories/{id}(id=${category.id})}"
+            hx-confirm="Seguro de borrar esta categoria???"
+            hx-target="closest .cat-card"
             hx-swap="outerHTML">
         <i class="ti ti-trash cat-icon-delete"></i>
     </button>
