@@ -7,6 +7,12 @@
         margin-bottom: 0.5rem;
    }
 
+   .container-content{
+        display: flex;
+        justify-content: center;
+        height: 90vh;
+   }
+
     
 /* ==========================================
    2. WELCOME PAGE
@@ -34,29 +40,173 @@
 /* ==========================================
    3. CATEGORIES MODULE
    ========================================== */
-/* Estilos para la card de categoría, el grid y los iconos */
-    .cat-button{
-    padding: 2px 5px; border: none;
-    }
 
-    .cat-card{
-    max-width: 50%;
-    height: 5rem;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 5px;
-    }
+#categories-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center; /* Centra la cuadrícula en la pantalla */
+    padding: 20px;
+    width: 50%;
+}
 
-    .cat-icon-delete{
-        color: white;
-    }
+.cat-card {
+    /* Forzamos el tamaño exacto */
+    width: 250px !important;
+    height: 300px !important;
+    flex: 0 0 250px;
 
-    .cat-icon-delete:hover{
-        color: red;
-    }
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0; /* Pico maneja padding en header/footer */
+    margin: 0;
+    position: relative;
+}
 
+/* Reset de fondos de Pico para un look más limpio */
+.cat-card header, .cat-card footer {
+    background: transparent;
+    border: none;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* Cuerpo centralizado */
+.cat-description {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.cat-description i {
+    font-size: 3rem; /* Icono grande y protagonista */
+    color: var(--pico-primary);
+}
+
+/* Footer: Botones a las puntas */
+.cat-card-footer {
+    justify-content: space-evenly;
+}
+
+.cat-button{
+    margin: 10px;
+    padding: 3px;
+    background: transparent;
+}
+
+#categories-list:has(form) .cat-card:not(:has(form)) .cat-button {
+    pointer-events: none !important;
+    opacity: 0.4;
+    filter: grayscale(1);
+    cursor: not-allowed;
+}
+
+/* 2. EXCEPCIÓN: LOS BOTONES DENTRO DEL FORMULARIO DEBEN SEGUIR ACTIVOS */
+/* (El botón de la "X" y el del "Check" deben poder clickearse) */
+.cat-card form .cat-button {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    filter: none !important;
+    cursor: pointer !important;
+}
+
+/* 3. BLOQUEO DURANTE PETICIONES HTMX (Ya lo tenías, pero reforzado) */
+body.htmx-request .cat-button {
+    pointer-events: none !important;
+    opacity: 0.6;
+    cursor: wait !important;
+}
+.cat-button i{
+    font-size: 1.5rem;
+}
+
+/* Formulario de edición: Ajuste de la X */
+.cat-edit-header {
+    justify-content: flex-end; /* Manda la X a la derecha */
+}
+
+.cat-edit-header button {
+    padding: 1px;
+}
+
+/* Dentro de la card de edición, reducimos los espacios de Pico */
+.cat-card form {
+    margin: 0;
+    height: 100%; /* Ocupa todo el alto del article */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Compactamos los inputs */
+.cat-card form .cat-description {
+    padding: 0 15px; /* Espacio lateral para que no toquen el borde */
+    gap: 5px; /* Espacio mínimo entre el input de nombre y el de icono */
+}
+
+.cat-card form input {
+    margin-bottom: 5px; /* Pico suele poner 1rem, aquí lo bajamos */
+    height: auto; /* Evita que el input sea muy alto */
+    padding: 8px; /* Un poco más pequeño para ahorrar espacio */
+    font-size: 0.9rem;
+}
+
+/* Ajuste del header y footer del form para que no roben tanto espacio */
+.cat-card form header,
+.cat-card form footer {
+    padding: 5px 15px;
+    min-height: 50px;
+}
 
 /* ==========================================
    4. HTMX & ANIMATIONS
    ========================================== */
 /* Clases para efectos cuando algo se está borrando o cargando */
+
+
+
+/* ==========================================
+   4. TOAST
+   ========================================== */
+/* Contenedor en la esquina inferior derecha */
+#toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    width: 320px;
+    max-width: 90vw;
+}
+
+/* Estilo de la tarjeta de notificación */
+.toast-card {
+    margin-bottom: 0.75rem !important;
+    padding: 0.75rem 1rem !important;
+    box-shadow: var(--pico-card-sectioning-background-color) 0px 8px 24px;
+    animation: slideIn 0.3s ease-out;
+    transition: opacity 0.6s ease;
+    border: 1px solid var(--pico-primary-border);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.toast-content button {
+    width: auto;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}

@@ -37,8 +37,41 @@
         </li>
     </ul>
 </nav>
-<main class="container">
+<main class="container-content">
     <div th:replace="~{__${content}__}"></div>
 </main>
+<div id="toast-container"></div>
+<div id="modal-container"></div>
+<script>
+    document.body.addEventListener('notify', (event) => {
+        const container = document.getElementById('toast-container');
+
+        // crear el elemento del toast
+        const toast = document.createElement('article');
+        toast.className = 'toast-card';
+        // estructura de Pico CSS: un párrafo y un botón de cierre
+        toast.innerHTML = `
+            <div class="toast-content">
+                <span>${event.detail.message}</span>
+                <button aria-label="Close" class="outline contrast" onclick="this.closest('article').remove()">X</button>
+            </div>
+        `;
+
+        container.appendChild(toast);
+
+        // Auto-eliminar después de 3 segundos con una pequeña transición
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 600);
+        }, 3000);
+    });
+
+    document.body.addEventListener('closeModal', function() {
+        const modal = document.querySelector('dialog[open]');
+        if (modal) {
+            modal.remove(); // Solo actúa si hay algo abierto
+        }
+    });
+</script>
 </body>
 </html>

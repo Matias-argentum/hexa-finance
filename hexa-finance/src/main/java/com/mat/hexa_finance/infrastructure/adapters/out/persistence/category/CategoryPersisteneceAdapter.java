@@ -8,6 +8,7 @@ import com.mat.hexa_finance.domain.model.Category;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,6 +27,7 @@ public class CategoryPersisteneceAdapter implements
     @Override
     public Category save(Category category) {
         CategoryEntity entity = new CategoryEntity();
+        entity.setId(category.getId());
         entity.setName(category.getName());
         entity.setIconName(category.getIconName());
         entity.setUserId(category.getUserId());
@@ -42,6 +44,12 @@ public class CategoryPersisteneceAdapter implements
         return foundCategories.stream()
                 .map(c -> new Category(c.getId(), c.getName(), c.getIconName(), c.getUserId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Category> findById(Long id) {
+        Optional<CategoryEntity> foundCategory = repository.findById(id);
+        return foundCategory.map(c -> new Category(c.getId(), c.getName(), c.getIconName(), c.getUserId()));
     }
 
     @Override

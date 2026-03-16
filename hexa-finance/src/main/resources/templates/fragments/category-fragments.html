@@ -1,29 +1,136 @@
-<div class="cat-card "
-     th:fragment="category-item"
->
-    <i th:class="'ti ti-' + ${category.iconName}"></i>
-    <strong th:text="${category.name}"></strong>
-    <button class="outline secondary cat-button"
-            th:hx-delete="@{/categories/{id}(id=${category.id})}"
-            hx-confirm="Seguro de borrar esta categoria???"
-            hx-target="closest .cat-card"
-            hx-swap="outerHTML">
-        <i class="ti ti-trash cat-icon-delete"></i>
-    </button>
-</div>
+<article th:id="'category-card-' + ${category.id}"  class="cat-card" th:fragment="category-item">
+    <header>
+    </header>
 
-<form hx-post="/categories"
-      hx-target="#categories-list"
-      hx-swap="beforeend"
-      hx-on::after-request="this.reset()"
-      th:fragment="category-form">
-    <label>
-        Category name
-        <input type="text" name="name" placeholder="Category name" required>
-    </label>
-    <label>
-        Icon Name
-        <input type="text" name="iconName" placeholder="Icon name (e.g. home, user)" required>
-    </label>
-    <button type="submit">Create Category</button>
-</form>
+    <div class="cat-description">
+        <i th:class="'ti ti-' + ${category.iconName}"></i>
+        <strong th:text="${category.name}"></strong>
+    </div>
+
+    <footer class="cat-card-footer">
+        <button class="secondary cat-button"
+                th:hx-get="@{/categories/{id}/edit(id=${category.id})}"
+                hx-target="closest .cat-card"
+                hx-swap="outerHTML"
+                hx-indicator="body">
+
+            <i class="ti ti-edit"></i>
+        </button>
+
+        <button class="secondary cat-button"
+                th:hx-get="@{/categories/{id}/delete-confirm(id=${category.id})}"
+                hx-target="#modal-container"
+                hx-indicator="body"> <i class="ti ti-trash cat-icon-delete"></i>
+        </button>
+    </footer>
+</article>
+
+<article class="cat-card" th:fragment="category-edit-form">
+    <form th:hx-put="@{/categories/{id}(id=${category.id})}"
+          hx-target="closest .cat-card"
+          hx-swap="outerHTML">
+
+        <header class="cat-edit-header">
+            <button type="button" class="outline secondary cat-button"
+                    hx-disabled-elt="this"
+                    th:hx-get="@{/categories/{id}(id=${category.id})}"
+                    hx-target="closest .cat-card"
+                    hx-swap="outerHTML">
+                <i class="ti ti-x"></i>
+            </button>
+        </header>
+
+        <div class="cat-description">
+            <input type="hidden" name="id" th:value="${category.id}">
+            <input type="text" name="name" th:value="${category.name}" placeholder="Nombre" required>
+            <input type="text" name="iconName" th:value="${category.iconName}" placeholder="Icono (ej: home)" required>
+        </div>
+
+        <footer style="justify-content: center;">
+            <button type="submit" class="cat-button" hx-disabled-elt="this">
+                <i class="ti ti-check"></i>
+            </button>
+        </footer>
+    </form>
+</article>
+
+
+<dialog id="category-modal" th:fragment="category-modal" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="document.getElementById('category-modal').remove()"></button>
+            <h3>Crear Categoría</h3>
+        </header>
+
+        <form hx-post="/categories"
+              hx-target="#modal-container"
+              hx-swap="innerHTML">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" placeholder="Ej: Comida" required>
+
+            <fieldset>
+                <legend>Icono</legend>
+
+                <label>
+                    <input type="radio" name="iconName" value="cash" required>
+                    <i class="ti ti-cash"></i> Dinero
+                </label>
+
+                <label>
+                    <input type="radio" name="iconName" value="shopping-cart">
+                    <i class="ti ti-shopping-cart"></i> Compras
+                </label>
+
+                <label>
+                    <input type="radio" name="iconName" value="home">
+                    <i class="ti ti-home"></i> Hogar
+                </label>
+
+                <label>
+                    <input type="radio" name="iconName" value="trending-up">
+                    <i class="ti ti-trending-up"></i> Ingresos
+                </label>
+
+                <label>
+                    <input type="radio" name="iconName" value="trending-down">
+                    <i class="ti ti-trending-down"></i> Egresos
+                </label>
+            </fieldset>
+            <footer style="display:flex; gap:1rem; justify-content:flex-end;">
+                <button type="button" class="secondary"
+                        onclick="document.getElementById('category-modal').remove()">Cancelar</button>
+                <button type="submit" hx-disabled-elt="this">Guardar</button>
+            </footer>
+        </form>
+    </article>
+</dialog>
+
+
+<dialog id="category-alert-modal" th:fragment="category-alert-modal" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="this.closest('dialog').remove()"></button>
+            <h3>Eliminar Categoría</h3>
+        </header>
+
+        <div>
+            <h4>¿Seguro que quiere borrar <strong th:text="${category.name}"></strong>?</h4>
+            <p>Si borra esta categoria se borrarán todas las transacciones asociadas a ella.</p>
+            <p></p>
+            <footer style="display:flex; gap:1rem; justify-content:flex-end;">
+                <button type="button" class="secondary"
+                        onclick="this.closest('dialog').remove()">Cancelar</button>
+                <button type="button"
+                        class="primary"
+                        th:hx-delete="@{/categories/{id}(id=${category.id})}"
+                        th:hx-target="'#category-card-' + ${category.id}"
+                        hx-swap="delete"
+                        hx-disabled-elt="this">Eliminar</button>
+            </footer>
+        </div>
+    </article>
+</dialog>
+
+

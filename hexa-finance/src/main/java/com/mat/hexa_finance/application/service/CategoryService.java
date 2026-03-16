@@ -1,9 +1,8 @@
 package com.mat.hexa_finance.application.service;
 
-import com.mat.hexa_finance.application.ports.in.category.DeleteCategoryUseCase;
-import com.mat.hexa_finance.application.ports.in.category.FindAllCategoriesUseCase;
-import com.mat.hexa_finance.application.ports.in.category.SaveCategoryUseCase;
+import com.mat.hexa_finance.application.ports.in.category.*;
 import com.mat.hexa_finance.application.ports.in.category.command.CreateCategoryCommand;
+import com.mat.hexa_finance.application.ports.in.category.command.UpdateCategoryCommand;
 import com.mat.hexa_finance.application.ports.out.category.CheckCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.DeleteCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.LoadCategoriesPort;
@@ -13,7 +12,11 @@ import com.mat.hexa_finance.domain.model.Category;
 
 import java.util.List;
 
-public class CategoryService implements SaveCategoryUseCase, FindAllCategoriesUseCase, DeleteCategoryUseCase {
+public class CategoryService implements SaveCategoryUseCase,
+        FindAllCategoriesUseCase,
+        DeleteCategoryUseCase,
+        UpdateCategoryUseCase,
+        GetCategoryUseCase {
     private final SaveCategoryPort saveCategoryPort;
     private final LoadCategoriesPort loadCategoriesPort;
     private final CheckCategoryPort checkCategoryPort;
@@ -22,7 +25,7 @@ public class CategoryService implements SaveCategoryUseCase, FindAllCategoriesUs
     public CategoryService(SaveCategoryPort saveCategoryPort,
                            LoadCategoriesPort loadCategoriesPort,
                            CheckCategoryPort checkCategoryPort,
-                           DeleteCategoryPort deleteCategoryPort){
+                           DeleteCategoryPort deleteCategoryPort) {
         this.saveCategoryPort = saveCategoryPort;
         this.loadCategoriesPort = loadCategoriesPort;
         this.checkCategoryPort = checkCategoryPort;
@@ -42,9 +45,26 @@ public class CategoryService implements SaveCategoryUseCase, FindAllCategoriesUs
 
     @Override
     public void delete(Long id) {
-        if (!checkCategoryPort.existsById(id)){
-            throw  new CategoryNotFoundException("Category does not exists");
+        if (!checkCategoryPort.existsById(id)) {
+            throw new CategoryNotFoundException("Category does not exists");
         }
         deleteCategoryPort.deleteById(id);
+    }
+
+    @Override
+    public Category update(UpdateCategoryCommand command) {
+        Category foundCategory = loadCategoriesPort.findById(command.getId())
+                .orElseThrow(() -> new CategoryNotFoundException("Category does not exists"));
+        foundCategory.setName(command.getName());
+        foundCategory.setIconName(command.getIconName());
+        foundCategory.setUserId(command.getUserId());
+
+        return saveCategoryPort.save(foundCategory);
+    }
+
+    @Override
+    public Category execute(Long id) {
+        return loadCategoriesPort.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException("Category does not exists"));
     }
 }

@@ -1,13 +1,25 @@
-<section th:fragment="dashboard-content">
+<section th:fragment="dashboard-content" class="container">
     <h2>Mi Dashboard</h2>
-
-    <div th:replace="~{fragments/category-fragments :: category-form}"></div>
-
-    <hr>
-
-    <div id="categories-list">
-        <div th:each="category : ${categories}">
-            <div th:replace="~{fragments/category-fragments :: category-item}"></div>
+    <div>
+        <input type="date" name="balanceDate" id="#balanceDate">
+        <hr>
+        <div style="display: flex;">
+            <article>Ingresos</article>
+            <article>Egresos</article>
+            <article>Balance</article>
         </div>
     </div>
+    <hr>
+    <div class="grid">
+        <button class="outline"
+                hx-get="/categories/new"
+                hx-target="#modal-container">
+            <i class="ti ti-plus"></i> Nueva Categoría
+        </button>
+        <button class="primary">
+            <i class="ti ti-plus"></i> Nueva Transacción
+        </button>
+    </div>
+
+    <hr>
 </section>
