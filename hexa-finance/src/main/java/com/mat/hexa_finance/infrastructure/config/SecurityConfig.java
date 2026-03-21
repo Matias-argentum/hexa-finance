@@ -4,27 +4,39 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println("---- CARGANDO CONFIGURACIÓN DE SEGURIDAD PERSONALIZADA ----");
         http
-                // 1. Deshabilitamos CSRF para que HTMX pueda hacer POST sin tokens
+                // deshabilita csrf para mandar htmx sin token
                 .csrf(csrf -> csrf.disable())
 
-                // 2. Permitimos que cualquier petición entre sin autenticación
+                // las petiiones a endpoint publicos o registro entran, el resto requiere estar autenticado
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers("/public/**", "/register", "/css/**", "/js/**", "/images/**")
+                        .permitAll()
+                        .anyRequest().authenticated()
                 )
-
-                // 3. Deshabilitamos el formulario de login por defecto
-                .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable());
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .usernameParameter("email")
+                        .permitAll()
+                )
+                .logout(logout -> logout.permitAll());
 
         return http.build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
