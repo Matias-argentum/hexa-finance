@@ -1,5 +1,5 @@
 <div id="categories-list" th:fragment="categories-content">
     <th:block th:each="cat : ${categories}">
-        <div th:replace="~{fragments/category-fragments :: category-item(category=${cat})}"></div>
+        <div th:replace="~{categories/fragments/category-fragments :: category-item(category=${cat})}"></div>
     </th:block>
 </div>

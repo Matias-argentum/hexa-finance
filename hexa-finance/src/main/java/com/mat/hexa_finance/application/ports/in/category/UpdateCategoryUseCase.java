@@ -4,5 +4,5 @@ import com.mat.hexa_finance.application.ports.in.category.command.UpdateCategory
 import com.mat.hexa_finance.domain.model.Category;
 
 public interface UpdateCategoryUseCase {
-    Category update(UpdateCategoryCommand command);
+    Category update(UpdateCategoryCommand command, boolean isAdmin);
 }

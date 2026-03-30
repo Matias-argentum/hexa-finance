@@ -5,6 +5,8 @@ import com.mat.hexa_finance.application.ports.out.category.DeleteCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.LoadCategoriesPort;
 import com.mat.hexa_finance.application.ports.out.category.SaveCategoryPort;
 import com.mat.hexa_finance.domain.model.Category;
+import com.mat.hexa_finance.infrastructure.adapters.out.persistence.user.JpaUserRepository;
+import com.mat.hexa_finance.infrastructure.adapters.out.persistence.user.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,9 +21,11 @@ public class CategoryPersisteneceAdapter implements
         DeleteCategoryPort {
 
     private final JpaCategoryRepository repository;
+    private final JpaUserRepository userRepository;
 
-    public CategoryPersisteneceAdapter(JpaCategoryRepository repository) {
+    public CategoryPersisteneceAdapter(JpaCategoryRepository repository, JpaUserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -30,26 +34,48 @@ public class CategoryPersisteneceAdapter implements
         entity.setId(category.getId());
         entity.setName(category.getName());
         entity.setIconName(category.getIconName());
-        entity.setUserId(category.getUserId());
 
-        CategoryEntity savedEntity = repository.save(entity);
+        if (category.getUserId() != null) {
+            UserEntity ownerRef = userRepository.getReferenceById(category.getUserId());
+            entity.setOwner(ownerRef);
+        }
+        // si es null owner queda null y es categoría global
 
-        return new Category(savedEntity.getId(), savedEntity.getName(), savedEntity.getIconName(), savedEntity.getUserId());
+        CategoryEntity saved = repository.save(entity);
 
+        Long savedOwnerId = saved.getOwner() != null ? saved.getOwner().getId() : null;
+
+        return new Category(saved.getId(), saved.getName(), saved.getIconName(), savedOwnerId);
     }
 
     @Override
-    public List<Category> findAll() {
-        List<CategoryEntity> foundCategories = repository.findAll();
-        return foundCategories.stream()
-                .map(c -> new Category(c.getId(), c.getName(), c.getIconName(), c.getUserId()))
-                .collect(Collectors.toList());
+    public List<Category> findAllByUserId(Long userId) {
+        return repository.findAllGlobalAndByUserId(userId)
+                .stream()
+                .map(entity -> {
+                    Long ownerId = entity.getOwner() != null ? entity.getOwner().getId() : null;
+                    return new Category(
+                            entity.getId(),
+                            entity.getName(),
+                            entity.getIconName(),
+                            ownerId
+                    );
+                })
+                .toList();
     }
 
     @Override
     public Optional<Category> findById(Long id) {
         Optional<CategoryEntity> foundCategory = repository.findById(id);
-        return foundCategory.map(c -> new Category(c.getId(), c.getName(), c.getIconName(), c.getUserId()));
+        return foundCategory.map(entity -> {
+            Long ownerId = entity.getOwner() != null ? entity.getOwner().getId() : null;
+            return new Category(
+                    entity.getId(),
+                    entity.getName(),
+                    entity.getIconName(),
+                    ownerId
+            );
+        });
     }
 
     @Override

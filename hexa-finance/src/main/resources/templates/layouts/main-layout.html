@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,10 +33,26 @@
         </li>
     </ul>
     <ul>
+        <li sec:authorize="isAuthenticated()">
+            <span class="secondary">Hola, <span sec:authentication="name">Usuario</span></span>
+        </li>
         <li><a href="/">Home</a></li>
-        <li><a href="/categories" class="secondary">Categorías</a></li>
-        <li>
-            <button class="contrast">Logout</button>
+        <li sec:authorize="isAuthenticated()">
+            <a href="/categories" class="secondary">Categorías</a>
+        </li>
+        <li sec:authorize="isAuthenticated()">
+            <button class="outline contrast"
+                    hx-post="/logout"
+                    hx-target="body">
+                Logout
+            </button>
+        </li>
+
+        <li sec:authorize="isAnonymous()">
+            <a href="/login" class="contrast">Login</a>
+        </li>
+        <li sec:authorize="isAnonymous()">
+            <a href="/register" class="outline">Registro</a>
         </li>
     </ul>
 </nav>
@@ -42,6 +61,23 @@
 </main>
 <div id="toast-container"></div>
 <div id="modal-container"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+
+        let message = '';
+        if (params.get('regSuccess') === 'true') message = "¡Registro exitoso! Ya puedes entrar.";
+        if (params.get('success') === 'true') message = "Bienvenido";
+        if (params.get('error') === 'true') message = "Credenciales incorrectas.";
+        if (params.has('logout')) message = "¡Hasta luego!"
+
+        if (message) {
+            document.body.dispatchEvent(new CustomEvent('notify', {
+                detail: { message }
+            }));
+        }
+    });
+</script>
 <script>
     document.body.addEventListener('notify', (event) => {
         const container = document.getElementById('toast-container');
@@ -63,7 +99,7 @@
         setTimeout(() => {
             toast.style.opacity = '0';
             setTimeout(() => toast.remove(), 600);
-        }, 3000);
+        }, 4000);
     });
 
     document.body.addEventListener('closeModal', function() {

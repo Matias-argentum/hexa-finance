@@ -7,21 +7,24 @@
         <strong th:text="${category.name}"></strong>
     </div>
 
-    <footer class="cat-card-footer">
-        <button class="secondary cat-button"
-                th:hx-get="@{/categories/{id}/edit(id=${category.id})}"
-                hx-target="closest .cat-card"
-                hx-swap="outerHTML"
-                hx-indicator="body">
+    <footer class="cat-card-footer" th:fragment="category-item">
+        <th:block th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') or category.userId != null}">
+            <button class="secondary cat-button"
+                    th:hx-get="@{/categories/{id}/edit(id=${category.id})}"
+                    hx-target="closest .cat-card"
+                    hx-swap="outerHTML"
+                    hx-indicator="body">
+                <i class="ti ti-edit"></i>
+            </button>
 
-            <i class="ti ti-edit"></i>
-        </button>
+            <button class="secondary cat-button"
+                    th:hx-get="@{/categories/{id}/delete-confirm(id=${category.id})}"
+                    hx-target="#modal-container"
+                    hx-indicator="body">
+                <i class="ti ti-trash cat-icon-delete"></i>
+            </button>
+        </th:block>
 
-        <button class="secondary cat-button"
-                th:hx-get="@{/categories/{id}/delete-confirm(id=${category.id})}"
-                hx-target="#modal-container"
-                hx-indicator="body"> <i class="ti ti-trash cat-icon-delete"></i>
-        </button>
     </footer>
 </article>
 
@@ -42,8 +45,17 @@
 
         <div class="cat-description">
             <input type="hidden" name="id" th:value="${category.id}">
+
             <input type="text" name="name" th:value="${category.name}" placeholder="Nombre" required>
-            <input type="text" name="iconName" th:value="${category.iconName}" placeholder="Icono (ej: home)" required>
+
+            <th:block th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                <label>Icono (Tabler ID):</label>
+                <input type="text" name="iconName" th:value="${category.iconName}" required>
+            </th:block>
+
+            <th:block th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                <i th:class="'ti ti-' + ${category.iconName}"></i> <input type="hidden" name="iconName" th:value="${category.iconName}">
+            </th:block>
         </div>
 
         <footer style="justify-content: center;">
@@ -120,14 +132,16 @@
             <p>Si borra esta categoria se borrarán todas las transacciones asociadas a ella.</p>
             <p></p>
             <footer style="display:flex; gap:1rem; justify-content:flex-end;">
-                <button type="button" class="secondary"
-                        onclick="this.closest('dialog').remove()">Cancelar</button>
-                <button type="button"
-                        class="primary"
-                        th:hx-delete="@{/categories/{id}(id=${category.id})}"
-                        th:hx-target="'#category-card-' + ${category.id}"
-                        hx-swap="delete"
-                        hx-disabled-elt="this">Eliminar</button>
+                <div>
+                    <button type="button" class="secondary"
+                            onclick="this.closest('dialog').remove()">Cancelar</button>
+                    <button type="button"
+                            class="primary"
+                            th:hx-delete="@{/categories/{id}(id=${category.id})}"
+                            th:hx-target="'#category-card-' + ${category.id}"
+                            hx-swap="delete"
+                            hx-disabled-elt="this">Eliminar Con Cuidado</button>
+                </div>
             </footer>
         </div>
     </article>

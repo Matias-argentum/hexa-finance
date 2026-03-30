@@ -9,6 +9,7 @@ import com.mat.hexa_finance.application.ports.out.category.LoadCategoriesPort;
 import com.mat.hexa_finance.application.ports.out.category.SaveCategoryPort;
 import com.mat.hexa_finance.domain.exception.CategoryNotFoundException;
 import com.mat.hexa_finance.domain.model.Category;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
@@ -39,22 +40,23 @@ public class CategoryService implements SaveCategoryUseCase,
     }
 
     @Override
-    public List<Category> execute() {
-        return loadCategoriesPort.findAll();
-    }
-
-    @Override
-    public void delete(Long id) {
-        if (!checkCategoryPort.existsById(id)) {
-            throw new CategoryNotFoundException("Category does not exists");
+    public void delete(Long id, Long userId, boolean isAdmin) {
+        Category category = loadCategoriesPort.findById(id).orElseThrow(
+                () -> new CategoryNotFoundException("Category does not exist")
+        );
+        if (!isAdmin && (category.getUserId() == null || !category.getUserId().equals(userId))) {
+            throw new AccessDeniedException("No permission granted");
         }
         deleteCategoryPort.deleteById(id);
     }
 
     @Override
-    public Category update(UpdateCategoryCommand command) {
+    public Category update(UpdateCategoryCommand command, boolean isAdmin) {
         Category foundCategory = loadCategoriesPort.findById(command.getId())
-                .orElseThrow(() -> new CategoryNotFoundException("Category does not exists"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category does not exist"));
+        if (!isAdmin && (foundCategory.getUserId() == null || !foundCategory.getUserId().equals(command.getUserId()))) {
+            throw new AccessDeniedException("No permission granted");
+        }
         foundCategory.setName(command.getName());
         foundCategory.setIconName(command.getIconName());
         foundCategory.setUserId(command.getUserId());
@@ -65,6 +67,11 @@ public class CategoryService implements SaveCategoryUseCase,
     @Override
     public Category execute(Long id) {
         return loadCategoriesPort.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Category does not exists"));
+                .orElseThrow(() -> new CategoryNotFoundException("Category does not exist"));
+    }
+
+    @Override
+    public List<Category> executeSearch(Long userId) {
+        return loadCategoriesPort.findAllByUserId(userId);
     }
 }

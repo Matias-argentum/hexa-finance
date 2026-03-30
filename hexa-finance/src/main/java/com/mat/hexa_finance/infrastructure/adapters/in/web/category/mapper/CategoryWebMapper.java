@@ -8,6 +8,7 @@ public class CategoryWebMapper {
         return new CategoryResponse(
                 category.getId(),
                 category.getName(),
+                category.getUserId(),
                 category.getIconName()
         );
     }

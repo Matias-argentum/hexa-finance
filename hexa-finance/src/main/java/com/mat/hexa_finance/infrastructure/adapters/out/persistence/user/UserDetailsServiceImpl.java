@@ -1,10 +1,14 @@
 package com.mat.hexa_finance.infrastructure.adapters.out.persistence.user;
 
 import com.mat.hexa_finance.application.ports.out.user.LoadUserPort;
+import com.mat.hexa_finance.infrastructure.adapters.in.web.auth.model.CustomUserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -21,11 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("No se encontró el email: " + email));
 
         // hay que poner los paquetes asi poruqe las dos clses se llaman user
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .disabled(!user.isActive())
-                .roles(user.getRole().name()) // Esto añade "ROLE_" automáticamente
-                .build();
+        return new CustomUserDetails(user, List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
     }
 }

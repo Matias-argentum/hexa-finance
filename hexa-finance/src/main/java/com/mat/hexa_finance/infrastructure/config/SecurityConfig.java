@@ -21,16 +21,21 @@ public class SecurityConfig {
 
                 // las petiiones a endpoint publicos o registro entran, el resto requiere estar autenticado
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/register", "/css/**", "/js/**", "/images/**")
+                        .requestMatchers("/","/public/**", "/register", "/css/**", "/js/**", "/images/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("email")
+                        .defaultSuccessUrl("/?success=true", true)
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
-                .logout(logout -> logout.permitAll());
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login?logout=true")
+                        .permitAll()
+                );
 
         return http.build();
     }
