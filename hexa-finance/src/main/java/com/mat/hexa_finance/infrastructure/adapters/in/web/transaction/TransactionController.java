@@ -1,0 +1,178 @@
+package com.mat.hexa_finance.infrastructure.adapters.in.web.transaction;
+
+import com.mat.hexa_finance.application.ports.in.category.FindAllCategoriesUseCase;
+import com.mat.hexa_finance.application.ports.in.transaction.*;
+import com.mat.hexa_finance.application.ports.in.transaction.command.CreateTransactionCommand;
+import com.mat.hexa_finance.application.ports.in.transaction.command.UpdateTransactionCommand;
+import com.mat.hexa_finance.domain.model.Category;
+import com.mat.hexa_finance.domain.model.Transaction;
+import com.mat.hexa_finance.domain.model.TransactionType;
+import com.mat.hexa_finance.infrastructure.adapters.in.web.auth.model.CustomUserDetails;
+import com.mat.hexa_finance.infrastructure.adapters.in.web.category.dto.CategoryResponse;
+import com.mat.hexa_finance.infrastructure.adapters.in.web.category.mapper.CategoryWebMapper;
+import com.mat.hexa_finance.infrastructure.adapters.in.web.common.utils.HtmxUtils.HtmxUtils;
+import com.mat.hexa_finance.infrastructure.adapters.in.web.transaction.dto.TransactionResponse;
+import com.mat.hexa_finance.infrastructure.adapters.in.web.transaction.mapper.TransactionWebMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+@Controller
+@RequestMapping("/transactions")
+public class TransactionController {
+
+    private final FindAllCategoriesUseCase findAllCategoriesUseCase;
+    private final SaveTransactionUseCase saveTransactionUseCase;
+    private final GetTransactionUseCase getTransactionUseCase;
+    private final FindAllTransactionsUseCase findAllTransactionsUseCase;
+    private final UpdateTransactionUseCase updateTransactionUseCase;
+    private final DeleteTransactionUseCase deleteTransactionUseCase;
+
+    public TransactionController(FindAllCategoriesUseCase findAllCategoriesUseCase,
+                                 SaveTransactionUseCase saveTransactionUseCase,
+                                 GetTransactionUseCase getTransactionUseCase,
+                                 FindAllTransactionsUseCase findAllTransactionsUseCase,
+                                 UpdateTransactionUseCase updateTransactionUseCase, DeleteTransactionUseCase deleteTransactionUseCase) {
+        this.findAllCategoriesUseCase = findAllCategoriesUseCase;
+        this.saveTransactionUseCase = saveTransactionUseCase;
+        this.getTransactionUseCase = getTransactionUseCase;
+        this.findAllTransactionsUseCase = findAllTransactionsUseCase;
+        this.updateTransactionUseCase = updateTransactionUseCase;
+        this.deleteTransactionUseCase = deleteTransactionUseCase;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/new")
+    public String getCreateTransactionModal(@AuthenticationPrincipal CustomUserDetails user, Model model){
+        List<CategoryResponse> categories = findAllCategoriesUseCase.executeSearch(user.getId())
+                .stream().map(CategoryWebMapper::toResponse).toList();
+
+        model.addAttribute("categories", categories);
+
+        model.addAttribute("transaction", null);
+        return "transactions/fragments/transactions-fragments :: transaction-modal";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping
+    public ResponseEntity<Void> createTransaction(
+            @RequestParam BigDecimal amount,
+            @RequestParam String type,
+            @RequestParam String description,
+            @RequestParam Long categoryId,
+            @RequestParam LocalDate date,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            HttpServletResponse response) {
+
+        CreateTransactionCommand command = new CreateTransactionCommand();
+        command.setAmount(amount);
+        command.setType(TransactionType.valueOf(type));
+        command.setDescription(description);
+        command.setCategoryId(categoryId);
+        command.setDate(date);
+        command.setUserId(userDetails.getId());
+
+        Transaction savedTransaction = saveTransactionUseCase.execute(command);
+
+
+        HtmxUtils.addNotificationAndClose(response, "Transacción registrada!");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping
+    public String getTransactions(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+        List<TransactionResponse> transactionsList = findAllTransactionsUseCase.execute(userDetails.getId())
+                .stream().map(TransactionWebMapper::toResponse).toList();
+
+        model.addAttribute("transactions", transactionsList);
+
+        model.addAttribute("content", "transactions/transactions :: transactions-content");
+
+        return "layouts/main-layout";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/edit")
+    public String getEditTransactionModal(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails user, Model model){
+        List<CategoryResponse> categories = findAllCategoriesUseCase.executeSearch(user.getId())
+                .stream().map(CategoryWebMapper::toResponse).toList();
+
+        Transaction transaction = getTransactionUseCase.executeFindById(id);
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("transaction", transaction);
+
+        return "transactions/fragments/transactions-fragments :: transaction-modal";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/{id}")
+    public String updateTransaction(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            Model model,
+            @PathVariable Long id,
+            @RequestParam BigDecimal amount,
+            @RequestParam String type,
+            @RequestParam String description,
+            @RequestParam Long categoryId,
+            @RequestParam LocalDate date,
+            HttpServletResponse response
+    ){
+        UpdateTransactionCommand command = new UpdateTransactionCommand();
+        command.setId(id);
+        command.setAmount(amount);
+        command.setType(TransactionType.valueOf(type));
+        command.setDescription(description);
+        command.setCategoryId(categoryId);
+        command.setDate(date);
+        command.setUserId(userDetails.getId());
+
+        updateTransactionUseCase.update(command);
+
+        TransactionResponse transactionResponse = TransactionWebMapper.toResponse(
+                getTransactionUseCase.executeFindByIdAndUserId(id, userDetails.getId())
+        );
+
+        model.addAttribute("t", transactionResponse);
+
+        HtmxUtils.addNotificationAndClose(response, "Transacción actualizada!");
+
+        return "transactions/fragments/transactions-fragments :: transaction-card";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/delete-confirm")
+    public String getDeleteTransactionModalAlert(@PathVariable Long id,
+                                              @AuthenticationPrincipal CustomUserDetails userDetails,
+                                              Model model) {
+
+        Transaction retrievedTransaction = getTransactionUseCase.executeFindById(id);
+
+        System.out.println(retrievedTransaction.getType());
+
+        model.addAttribute("t", retrievedTransaction);
+        return "transactions/fragments/transactions-fragments :: transaction-alert-modal";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id,
+                                               @AuthenticationPrincipal CustomUserDetails user,
+                                               HttpServletResponse response) {
+
+        deleteTransactionUseCase.delete(id, user.getId());
+        HtmxUtils.addNotificationAndClose(response, "Transacción eliminada!");
+        return ResponseEntity.ok().build();
+    }
+}

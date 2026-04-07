@@ -164,10 +164,152 @@ body.htmx-request .cat-button {
 }
 
 /* ==========================================
-   4. HTMX & ANIMATIONS
+   4. Transactions module
    ========================================== */
-/* Clases para efectos cuando algo se está borrando o cargando */
+/* Estilos para las tarjetas de transacciones */
+.transaction-card {
+    border-left: 6px solid var(--pico-muted-border-color); /* Borde por defecto */
+    margin-bottom: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.2s;
+}
 
+.transaction-card:hover {
+    transform: scale(1.01);
+}
+
+/* Variaciones por tipo */
+.card-expense {
+    border-left-color: #d32f2f; /* Rojo */
+}
+
+.card-income {
+    border-left-color: #388e3c; /* Verde */
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.transaction-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.amount-section {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.transaction-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--pico-muted-color);
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.actions i {
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+.badge-expense, .badge-income {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-expense { background-color: #fdecea; color: #d32f2f; }
+.badge-income { background-color: #e8f5e9; color: #388e3c; }
+/* Contenedor principal de la tarjeta */
+.transaction-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Permite que baje en mobile */
+    gap: 1rem;
+    width: 100%;
+}
+
+/* Bloque de información principal */
+.transaction-main-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1; /* Hace que este bloque use todo el ancho posible */
+}
+
+.amount-category {
+    display: flex;
+    flex-direction: column;
+}
+
+.amount-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+/* Estilo para el "Ver más" */
+.transaction-description details {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding: 0;
+}
+
+.transaction-description summary {
+    font-size: 0.8rem;
+    color: var(--pico-secondary);
+    list-style: none; /* Quita la flecha por defecto si quieres */
+    cursor: pointer;
+}
+
+.transaction-description p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--pico-muted-color);
+}
+
+/* --- MEDIA QUERIES PARA MOBILE --- */
+@media (max-width: 768px) {
+    .transaction-container {
+        flex-direction: column;
+        align-items: flex-start; /* Alinea todo a la izquierda */
+    }
+
+    .transaction-main-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .transaction-meta {
+        width: 100%;
+        display: flex;
+        justify-content: space-between; /* Fecha y acciones en los extremos */
+        border-top: 1px solid var(--pico-card-border-color);
+        padding-top: 0.5rem;
+    }
+}
 
 
 /* ==========================================

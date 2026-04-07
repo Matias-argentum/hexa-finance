@@ -1,0 +1,147 @@
+<dialog th:fragment="transaction-modal" id="modal-transaction" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="document.getElementById('modal-transaction').remove()"></button>
+            <h3 th:text="${transaction != null ? 'Editar Transacción' : 'Nueva Transacción'}"></h3>
+        </header>
+
+        <form th:attr="
+                hx-post=${transaction == null ? '/transactions' : null},
+                hx-put=${transaction != null ? '/transactions/' + transaction.id : null},
+                hx-target=${transaction == null ? '#modal-container' : '#transaction-' + transaction.id}"
+              hx-swap="outerHTML">
+
+            <input type="hidden" th:if="${transaction != null}" name="id" th:value="${transaction.id}">
+
+            <div class="grid">
+                <label for="amount">
+                    Monto
+                    <input type="number" id="amount" name="amount" step="0.01"
+                           th:value="${transaction != null ? transaction.amount : ''}"
+                           placeholder="0.00" required>
+                </label>
+
+                <label for="type">
+                    Tipo
+                    <select id="type" name="type" required>
+                        <option value="EXPENSE" th:selected="${transaction != null && transaction.type.name() == 'EXPENSE'}">Gasto</option>
+                        <option value="INCOME" th:selected="${transaction != null && transaction.type.name() == 'INCOME'}">Ingreso</option>
+                    </select>
+                </label>
+            </div>
+
+            <label for="description">Descripción</label>
+            <input type="text" id="description" name="description"
+                   th:value="${transaction != null ? transaction.description : ''}"
+                   placeholder="Ej: Compras semanal super" required>
+
+            <div class="grid">
+                <label for="category">
+                    Categoría
+                    <select id="category" name="categoryId" required>
+                        <option value="" disabled th:selected="${transaction == null}">Seleccionar...</option>
+                        <option th:each="cat : ${categories}"
+                                th:value="${cat.id}"
+                                th:text="${cat.name}"
+                                th:selected="${transaction != null && transaction.categoryId == cat.id}"></option>
+                    </select>
+                </label>
+
+                <label for="date">
+                    Fecha
+                    <input type="date" id="date" name="date"
+                           th:value="${transaction != null ? transaction.date : #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                           required>
+                </label>
+            </div>
+
+            <footer>
+                <button type="button" class="secondary"
+                        onclick="document.getElementById('modal-transaction').remove()">
+                    Cancelar
+                </button>
+                <button type="submit" th:text="${transaction != null ? 'Actualizar' : 'Guardar'}"></button>
+            </footer>
+        </form>
+    </article>
+</dialog>
+
+<article th:fragment="transaction-card(t)"
+         class="transaction-card"
+         th:classappend="${t.type == 'Gasto' ? 'card-expense' : 'card-income'}"
+         th:id="'transaction-' + ${t.id}">
+
+    <div class="transaction-container">
+
+        <div class="transaction-main-info">
+            <span class="badge"
+                  th:classappend="${t.type == 'Gasto' ? 'badge-expense' : 'badge-income'}"
+                  th:text="${t.type}"></span>
+
+            <div class="amount-category">
+                            <span class="amount-text"
+                                  th:text="${(t.type == 'Gasto' ? '-' : '+') + '$' + t.amount}"></span>
+                <div class="category-info">
+                    <i th:class="'ti ti-' + ${t.categoryIcon}"></i>
+                    <span th:text="${t.categoryName}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-meta">
+            <span class="date-text" th:text="${#temporals.format(t.date, 'dd/MM/yyyy')}"></span>
+            <div class="actions">
+                <button
+                        th:hx-get="@{/transactions/{id}/edit(id=${t.id})}"
+                        hx-target="#modal-container"
+                >
+                    <i class="ti ti-edit"></i>
+                </button>
+
+                <button
+                        th:hx-get="@{/transactions/{id}/delete-confirm(id=${t.id})}"
+                        hx-target="#modal-container"
+                >
+                    <i class="ti ti-trash cat-icon-delete"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="transaction-description">
+        <details>
+            <summary>Descripción</summary>
+            <p th:text="${t.description}"></p>
+        </details>
+    </div>
+</article>
+
+
+<dialog id="transaction-alert-modal" th:fragment="transaction-alert-modal" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="this.closest('dialog').remove()"></button>
+            <h3>Eliminar Transacción</h3>
+        </header>
+
+        <div>
+            <h4 th:text="'¿Seguro que quiere borrar este ' + (${t.type.name() == 'EXPENSE' ? 'Gasto' : 'Ingreso'}) + ' de $' + ${t.amount} + '?'"></h4>
+            <p>Se perderán estos datos.</p>
+            <p></p>
+            <footer style="display:flex; gap:1rem; justify-content:flex-end;">
+                <div>
+                    <button type="button" class="secondary"
+                            onclick="this.closest('dialog').remove()">Cancelar</button>
+                    <button type="button"
+                            class="primary"
+                            th:hx-delete="@{/transactions/{id}(id=${t.id})}"
+                            th:hx-target="'#transaction-' + ${t.id}"
+                            hx-swap="delete"
+                            hx-disabled-elt="this">Eliminar</button>
+                </div>
+            </footer>
+        </div>
+    </article>
+</dialog>

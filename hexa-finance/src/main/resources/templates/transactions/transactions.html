@@ -1,0 +1,12 @@
+<div id="transactions-list" th:fragment="transactions-content">
+    <div>
+        <h2>Últimos Movimientos</h2>
+        <div>
+            filtro1, filtro 2, filtro 3, aplicar filtros
+        </div>
+    </div>
+    <br>
+    <th:block th:each="t : ${transactions}">
+        <div th:replace="~{transactions/fragments/transactions-fragments :: transaction-card(t=${t})}"></div>
+    </th:block>
+</div>

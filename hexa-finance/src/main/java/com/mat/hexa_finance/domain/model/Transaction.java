@@ -15,4 +15,17 @@ public class Transaction {
     private Long categoryId;
     private LocalDate date;
     private Long userId;
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", categoryId=" + categoryId +
+                ", date=" + date +
+                ", userId=" + userId +
+                '}';
+    }
 }

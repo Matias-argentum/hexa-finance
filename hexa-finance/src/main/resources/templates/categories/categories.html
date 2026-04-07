@@ -1,5 +1,13 @@
-<div id="categories-list" th:fragment="categories-content">
-    <th:block th:each="cat : ${categories}">
-        <div th:replace="~{categories/fragments/category-fragments :: category-item(category=${cat})}"></div>
-    </th:block>
+<div th:fragment="categories-content">
+    <div>
+        <h2>Categorías del sistema y propias</h2>
+    </div>
+    <br>
+    <div>
+        <div id="categories-list">
+            <th:block th:each="cat : ${categories}">
+                <div th:replace="~{categories/fragments/category-fragments :: category-item(category=${cat})}"></div>
+            </th:block>
+        </div>
+    </div>
 </div>

@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTMX + Pico CSS App</title>
+    <title>Lita</title>
     <!-- custom styling -->
     <link rel="stylesheet" href="/css/custom.css">
     <!-- Pico CSS for styling -->
@@ -36,7 +36,9 @@
         <li sec:authorize="isAuthenticated()">
             <span class="secondary">Hola, <span sec:authentication="name">Usuario</span></span>
         </li>
-        <li><a href="/">Home</a></li>
+        <li sec:authorize="isAuthenticated()">
+            <a href="/transactions" class="secondary">Transacciones</a>
+        </li>
         <li sec:authorize="isAuthenticated()">
             <a href="/categories" class="secondary">Categorías</a>
         </li>

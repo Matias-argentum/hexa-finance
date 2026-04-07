@@ -122,7 +122,7 @@ public class CategoryController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/categories/new")
     public String getCreateCategoryModal(Model model) {
-        return "fragments/category-fragments :: category-modal";
+        return "categories/fragments/category-fragments :: category-modal";
     }
 
     @PreAuthorize("isAuthenticated()")
