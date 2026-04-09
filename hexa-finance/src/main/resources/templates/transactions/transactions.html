@@ -2,11 +2,59 @@
     <div>
         <h2>Últimos Movimientos</h2>
         <div>
-            filtro1, filtro 2, filtro 3, aplicar filtros
+            <form id="filter-form"
+                  hx-get="/transactions"
+                  hx-target="#transactions-list"
+                  hx-swap="outerHTML"
+                  hx-push-url="true">
+                <div class="grid">
+                    <input type="date"
+                           name="from"
+                           th:value="${currentFrom}"
+                           aria-label="Desde">
+
+                    <input type="date"
+                           name="to"
+                           th:value="${currentTo}"
+                           aria-label="Hasta">
+
+                    <button type="submit">Filtrar</button>
+                </div>
+            </form>
         </div>
     </div>
+
     <br>
-    <th:block th:each="t : ${transactions}">
+
+    <th:block th:each="t : ${page.content}">
         <div th:replace="~{transactions/fragments/transactions-fragments :: transaction-card(t=${t})}"></div>
     </th:block>
+
+    <nav aria-label="pagination">
+        <ul>
+            <li>
+                <button class="secondary"
+                        th:if="${page.hasPrevious()}"
+                        th:hx-get="@{/transactions(page=${page.number - 1})}"
+                        hx-target="#transactions-list"
+                        hx-include="#filter-form">
+                    Anterior
+                </button>
+            </li>
+
+            <li>
+                <small th:text="'Página ' + (${page.number} + 1) + ' de ' + ${page.totalPages}"></small>
+            </li>
+
+            <li>
+                <button class="secondary"
+                        th:if="${page.hasNext()}"
+                        th:hx-get="@{/transactions(page=${page.number + 1})}"
+                        hx-target="#transactions-list"
+                        hx-include="#filter-form">
+                    Siguiente
+                </button>
+            </li>
+        </ul>
+    </nav>
 </div>

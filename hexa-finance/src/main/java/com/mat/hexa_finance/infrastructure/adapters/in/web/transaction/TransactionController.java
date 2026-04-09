@@ -55,7 +55,7 @@ public class TransactionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/new")
-    public String getCreateTransactionModal(@AuthenticationPrincipal CustomUserDetails user, Model model){
+    public String getCreateTransactionModal(@AuthenticationPrincipal CustomUserDetails user, Model model) {
         List<CategoryResponse> categories = findAllCategoriesUseCase.executeSearch(user.getId())
                 .stream().map(CategoryWebMapper::toResponse).toList();
 
@@ -91,8 +91,9 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    /*
     @PreAuthorize("isAuthenticated()")
-    @GetMapping
+    @GetMapping("/all")
     public String getTransactions(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         List<TransactionResponse> transactionsList = findAllTransactionsUseCase.execute(userDetails.getId())
                 .stream().map(TransactionWebMapper::toResponse).toList();
@@ -103,18 +104,21 @@ public class TransactionController {
 
         return "layouts/main-layout";
     }
+    */
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/paginated")
-    public String getTransactionsPaginated(@AuthenticationPrincipal CustomUserDetails userDetails,
+    @GetMapping
+    public String getTransactionsPaginated(@RequestHeader(value = "HX-Request", required = false) String htmxHeader,
+                                           @AuthenticationPrincipal CustomUserDetails userDetails,
                                            Model model,
                                            @RequestParam(required = true, defaultValue = "0") int page,
                                            @RequestParam(required = false) LocalDate from,
                                            @RequestParam(required = false) LocalDate to
-                                           ) {
-        if ((to == null || from == null) || to.isBefore(from) ){
+    ) {
+
+        if ((to == null || from == null) || to.isBefore(from)) {
             to = LocalDate.now();
-            from = LocalDate.MIN;
+            from = LocalDate.now().withDayOfMonth(1);
         }
 
         PageRequest pageRequest = PageRequest.of(page, 5);
@@ -122,10 +126,17 @@ public class TransactionController {
         Page<TransactionResponse> transactionsPaginated = findAllTransactionsUseCase.executeForPagination(userDetails.getId(), from, to, pageRequest)
                 .map(TransactionWebMapper::toResponse);
 
-        model.addAttribute("transactions", transactionsPaginated.getContent());
-        System.out.println("Total pages: " +  transactionsPaginated.getTotalPages());
+        model.addAttribute("page", transactionsPaginated);
+        System.out.println("Total pages: " + transactionsPaginated.getTotalPages());
         System.out.println("Total elements: " + transactionsPaginated.getTotalElements());
-        System.out.println("All content: " + transactionsPaginated);
+        System.out.println("All content: " + transactionsPaginated.getContent());
+
+        model.addAttribute("currentFrom", from);
+        model.addAttribute("currentTo", to);
+
+        if (htmxHeader != null) {
+            return "transactions/transactions :: transactions-content";
+        }
 
         model.addAttribute("content", "transactions/transactions :: transactions-content");
 
@@ -134,7 +145,7 @@ public class TransactionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/edit")
-    public String getEditTransactionModal(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails user, Model model){
+    public String getEditTransactionModal(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails user, Model model) {
         List<CategoryResponse> categories = findAllCategoriesUseCase.executeSearch(user.getId())
                 .stream().map(CategoryWebMapper::toResponse).toList();
 
@@ -158,7 +169,7 @@ public class TransactionController {
             @RequestParam Long categoryId,
             @RequestParam LocalDate date,
             HttpServletResponse response
-    ){
+    ) {
         UpdateTransactionCommand command = new UpdateTransactionCommand();
         command.setId(id);
         command.setAmount(amount);
@@ -184,8 +195,8 @@ public class TransactionController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/delete-confirm")
     public String getDeleteTransactionModalAlert(@PathVariable Long id,
-                                              @AuthenticationPrincipal CustomUserDetails userDetails,
-                                              Model model) {
+                                                 @AuthenticationPrincipal CustomUserDetails userDetails,
+                                                 Model model) {
 
         Transaction retrievedTransaction = getTransactionUseCase.executeFindById(id);
 

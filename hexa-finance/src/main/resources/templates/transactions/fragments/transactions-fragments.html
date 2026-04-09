@@ -10,7 +10,7 @@
                 hx-post=${transaction == null ? '/transactions' : null},
                 hx-put=${transaction != null ? '/transactions/' + transaction.id : null},
                 hx-target=${transaction == null ? '#modal-container' : '#transaction-' + transaction.id}"
-              hx-swap="outerHTML">
+              hx-swap="innerHTML">
 
             <input type="hidden" th:if="${transaction != null}" name="id" th:value="${transaction.id}">
 
