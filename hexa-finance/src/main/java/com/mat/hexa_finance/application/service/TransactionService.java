@@ -11,9 +11,12 @@ import com.mat.hexa_finance.domain.exception.BadTransactionFieldException;
 import com.mat.hexa_finance.domain.exception.TransactionNotFoundException;
 import com.mat.hexa_finance.domain.model.Transaction;
 import com.mat.hexa_finance.domain.model.TransactionDetail;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +49,11 @@ public class TransactionService implements SaveTransactionUseCase,
     @Override
     public List<TransactionDetail> execute(Long userId) {
         return loadTransactionsPort.findAllByUserId(userId);
+    }
+
+    @Override
+    public Page<TransactionDetail> executeForPagination(Long userId, LocalDate from, LocalDate to, Pageable pageable) {
+        return loadTransactionsPort.findAllByUserIdPaginated(userId, from, to, pageable);
     }
 
     @Override

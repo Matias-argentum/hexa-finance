@@ -12,11 +12,15 @@ import com.mat.hexa_finance.infrastructure.adapters.out.persistence.category.Cat
 import com.mat.hexa_finance.infrastructure.adapters.out.persistence.category.JpaCategoryRepository;
 import com.mat.hexa_finance.infrastructure.adapters.out.persistence.user.JpaUserRepository;
 import com.mat.hexa_finance.infrastructure.adapters.out.persistence.user.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class TransactionPersistenceAdapter implements
@@ -63,6 +67,12 @@ public class TransactionPersistenceAdapter implements
                 ;
 
         return foundTransaction.map(TransactionMapper::toDetailDomain);
+    }
+
+    @Override
+    public Page<TransactionDetail> findAllByUserIdPaginated(Long userId, LocalDate from, LocalDate to, Pageable pageable) {
+        Page<TransactionEntity> page = transactionRepository.findAllByUserIdAndDateBetween(userId, from, to, pageable);
+        return page.map(TransactionMapper::toDetailDomain);
     }
 
     @Override

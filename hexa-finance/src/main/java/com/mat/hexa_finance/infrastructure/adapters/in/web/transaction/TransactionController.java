@@ -14,6 +14,8 @@ import com.mat.hexa_finance.infrastructure.adapters.in.web.common.utils.HtmxUtil
 import com.mat.hexa_finance.infrastructure.adapters.in.web.transaction.dto.TransactionResponse;
 import com.mat.hexa_finance.infrastructure.adapters.in.web.transaction.mapper.TransactionWebMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -96,6 +98,34 @@ public class TransactionController {
                 .stream().map(TransactionWebMapper::toResponse).toList();
 
         model.addAttribute("transactions", transactionsList);
+
+        model.addAttribute("content", "transactions/transactions :: transactions-content");
+
+        return "layouts/main-layout";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/paginated")
+    public String getTransactionsPaginated(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                           Model model,
+                                           @RequestParam(required = true, defaultValue = "0") int page,
+                                           @RequestParam(required = false) LocalDate from,
+                                           @RequestParam(required = false) LocalDate to
+                                           ) {
+        if ((to == null || from == null) || to.isBefore(from) ){
+            to = LocalDate.now();
+            from = LocalDate.MIN;
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, 5);
+
+        Page<TransactionResponse> transactionsPaginated = findAllTransactionsUseCase.executeForPagination(userDetails.getId(), from, to, pageRequest)
+                .map(TransactionWebMapper::toResponse);
+
+        model.addAttribute("transactions", transactionsPaginated.getContent());
+        System.out.println("Total pages: " +  transactionsPaginated.getTotalPages());
+        System.out.println("Total elements: " + transactionsPaginated.getTotalElements());
+        System.out.println("All content: " + transactionsPaginated);
 
         model.addAttribute("content", "transactions/transactions :: transactions-content");
 
