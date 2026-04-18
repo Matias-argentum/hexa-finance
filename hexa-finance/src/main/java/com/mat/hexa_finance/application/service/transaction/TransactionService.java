@@ -1,4 +1,4 @@
-package com.mat.hexa_finance.application.service;
+package com.mat.hexa_finance.application.service.transaction;
 
 import com.mat.hexa_finance.application.ports.in.transaction.*;
 import com.mat.hexa_finance.application.ports.in.transaction.command.CreateTransactionCommand;
@@ -18,7 +18,6 @@ import org.springframework.security.access.AccessDeniedException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public class TransactionService implements SaveTransactionUseCase,
         FindAllTransactionsUseCase,

@@ -1,6 +1,5 @@
 package com.mat.hexa_finance.infrastructure.adapters.out.persistence.transaction;
 
-import com.mat.hexa_finance.domain.model.TransactionDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

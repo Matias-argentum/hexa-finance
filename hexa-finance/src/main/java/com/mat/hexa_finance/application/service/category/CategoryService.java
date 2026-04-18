@@ -1,4 +1,4 @@
-package com.mat.hexa_finance.application.service;
+package com.mat.hexa_finance.application.service.category;
 
 import com.mat.hexa_finance.application.ports.in.category.*;
 import com.mat.hexa_finance.application.ports.in.category.command.CreateCategoryCommand;

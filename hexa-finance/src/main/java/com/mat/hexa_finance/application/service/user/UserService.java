@@ -1,4 +1,4 @@
-package com.mat.hexa_finance.application.service;
+package com.mat.hexa_finance.application.service.user;
 
 import com.mat.hexa_finance.application.ports.in.user.RegisterUserUseCase;
 import com.mat.hexa_finance.application.ports.in.user.command.RegisterUserCommand;

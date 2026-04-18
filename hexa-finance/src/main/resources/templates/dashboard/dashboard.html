@@ -1,15 +1,46 @@
-<section th:fragment="dashboard-content" class="container">
-    <h2>Mi Dashboard</h2>
-    <div>
-        <input type="date" name="balanceDate" id="#balanceDate">
-        <hr>
-        <div style="display: flex;">
-            <article>Ingresos</article>
-            <article>Egresos</article>
-            <article>Balance</article>
-        </div>
+<section th:fragment="dashboard-content" class="container" id="dashboard-container">
+    <h2 th:text="'Hola, ' + ${username}">Mi Dashboard</h2>
+
+    <div style="margin-bottom: 2rem;">
+        <label for="month-filter">Filtrar por periodo:</label>
+        <input type="month"
+               id="month-filter"
+               name="month"
+               th:value="${selectedMonth}"
+               hx-get="/"
+               hx-target="#dashboard-container"
+               hx-select="#dashboard-container"
+               hx-trigger="change">
     </div>
+
+    <div class="grid" id="balance-cards">
+        <article>
+            <header>Ingresos</header>
+            <h3 style="color: #2ecc71;"
+                th:text="${summary != null ? '$' + summary.totalIncome : '$0'}">
+                $0
+            </h3>
+        </article>
+
+        <article>
+            <header>Egresos</header>
+            <h3 style="color: #e74c3c;"
+                th:text="${summary != null ? '$' + summary.totalExpense : '$0'}">
+                $0
+            </h3>
+        </article>
+
+        <article>
+            <header>Balance Neto</header>
+            <h3 th:style="'color: ' + (${summary != null && summary.calculateBalance() >= 0} ? '#2ecc71' : '#e74c3c')"
+                th:text="${summary != null ? '$' + summary.calculateBalance() : '$0'}">
+                $0
+            </h3>
+        </article>
+    </div>
+
     <hr>
+
     <div class="grid">
         <button class="outline"
                 hx-get="/categories/new"

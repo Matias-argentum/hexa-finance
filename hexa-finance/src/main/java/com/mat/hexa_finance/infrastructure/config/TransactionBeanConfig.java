@@ -4,7 +4,7 @@ import com.mat.hexa_finance.application.ports.out.transaction.CheckTransactionPo
 import com.mat.hexa_finance.application.ports.out.transaction.DeleteTransactionPort;
 import com.mat.hexa_finance.application.ports.out.transaction.LoadTransactionsPort;
 import com.mat.hexa_finance.application.ports.out.transaction.SaveTransactionPort;
-import com.mat.hexa_finance.application.service.TransactionService;
+import com.mat.hexa_finance.application.service.transaction.TransactionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

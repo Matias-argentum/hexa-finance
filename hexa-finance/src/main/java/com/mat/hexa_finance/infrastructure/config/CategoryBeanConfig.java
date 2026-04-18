@@ -4,7 +4,7 @@ import com.mat.hexa_finance.application.ports.out.category.CheckCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.DeleteCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.LoadCategoriesPort;
 import com.mat.hexa_finance.application.ports.out.category.SaveCategoryPort;
-import com.mat.hexa_finance.application.service.CategoryService;
+import com.mat.hexa_finance.application.service.category.CategoryService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
