@@ -1,0 +1,52 @@
+<section th:fragment="report-content" class="container">
+    <div class="report-grid">
+        <aside class="report-sidebar">
+            <details id="filter-details" open>
+                <summary role="button" class="outline secondary hamburger-button">
+                    <i class="ti ti-filter"></i> Filtros de Reporte
+                </summary>
+
+                <form hx-get="/reports/search"
+                      hx-target="#report-results"
+                      hx-indicator="#loading-spinner"
+                      class="filter-form">
+
+                    <label for="from">Desde
+                        <input type="date" id="from" name="from" required>
+                    </label>
+
+                    <label for="to">Hasta
+                        <input type="date" id="to" name="to" required>
+                    </label>
+
+                    <label for="type">Tipo
+                        <select id="type" name="type" required>
+                            <option value="EXPENSE">Gasto</option>
+                            <option value="INCOME">Ingreso</option>
+                        </select>
+                    </label>
+
+                    <fieldset>
+                        <legend>Categorías</legend>
+                        <div class="category-scroll-area">
+                            <div th:each="cat : ${categories}" class="checkbox-item">
+                                <input type="checkbox"
+                                       th:id="'cat-' + ${cat.id}"
+                                       name="categoryIds"
+                                       th:value="${cat.id}">
+                                <label th:for="'cat-' + ${cat.id}" th:text="${cat.name}"></label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="primary">Generar Reporte</button>
+                    <div id="loading-spinner" class="htmx-indicator" aria-busy="true">Generando...</div>
+                </form>
+            </details>
+        </aside>
+
+        <div id="report-results" class="report-main">
+            <p class="secondary">Selecciona los filtros para ver el reporte.</p>
+        </div>
+    </div>
+</section>

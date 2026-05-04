@@ -1,0 +1,55 @@
+<div th:fragment="results" id="results-container">
+    <article th:if="${report != null}">
+        <header>
+            <h3 style="margin-bottom: 0.5rem;">Resumen de Finanzas</h3>
+            <p style="font-size: 0.9rem; color: var(--pico-secondary-color);">
+                Período:
+                <strong th:text="${#temporals.format(report.from, 'dd/MM/yyyy')}">01/01/2024</strong>
+                al
+                <strong th:text="${#temporals.format(report.to, 'dd/MM/yyyy')}">31/01/2024</strong>
+            </p>
+
+            <p style="font-size: 0.8rem;" th:if="${report.categories != null}">
+                <small>
+                    Categorías incluidas:
+                    <span th:each="cat, iter : ${report.categories}"
+                          th:text="${cat.categoryName} + ${!iter.last ? ', ' : ''}">
+            </span>
+                </small>
+            </p>
+        </header>
+
+        <table class="striped">
+            <thead>
+            <tr>
+                <th>Categoría</th>
+                <th style="text-align: right;">Total Acumulado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${report.categories}">
+                <td th:text="${item.categoryName}">Categoría</td>
+                <td style="text-align: right;" th:text="'$' + ${item.amount}">$0.00</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td><strong>TOTAL GENERAL</strong></td>
+                <td style="text-align: right;">
+                    <mark><strong th:text="'$' + ${report.grandTotal}">$0.00</strong></mark>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <footer>
+            <button class="outline" onclick="window.print()">
+                <i class="ti ti-printer"></i> Imprimir / Guardar PDF
+            </button>
+        </footer>
+    </article>
+
+    <div th:if="${report == null || report.categories.isEmpty()}" class="pico-color-red-500">
+        No se encontraron transacciones para los filtros seleccionados.
+    </div>
+</div>

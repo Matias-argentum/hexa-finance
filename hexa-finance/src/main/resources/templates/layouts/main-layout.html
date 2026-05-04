@@ -34,27 +34,22 @@
     </ul>
     <ul>
         <li sec:authorize="isAuthenticated()">
-            <span class="secondary">Hola, <span sec:authentication="name">Usuario</span></span>
-        </li>
-        <li sec:authorize="isAuthenticated()">
-            <a href="/transactions" class="secondary">Transacciones</a>
-        </li>
-        <li sec:authorize="isAuthenticated()">
-            <a href="/categories" class="secondary">Categorías</a>
-        </li>
-        <li sec:authorize="isAuthenticated()">
-            <button class="outline contrast"
-                    hx-post="/logout"
-                    hx-target="body">
-                Logout
-            </button>
-        </li>
-
-        <li sec:authorize="isAnonymous()">
-            <a href="/login" class="contrast">Login</a>
-        </li>
-        <li sec:authorize="isAnonymous()">
-            <a href="/register" class="outline">Registro</a>
+            <details class="dropdown">
+                <summary aria-haspopup="listbox" role="link" class="outline contrast">
+                    <i class="ti ti-menu-2"></i>
+                </summary>
+                <ul role="listbox">
+                    <li><a href="/transactions">Transacciones</a></li>
+                    <li><a href="/categories">Categorías</a></li>
+                    <li><a href="/reports">Reportes</a></li>
+                    <li><a href="/profile">Mi Perfil</a></li>
+                    <li>
+                        <form hx-post="/logout" hx-target="body">
+                            <button type="submit" class="outline contrast" style="width: 100%">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </details>
         </li>
     </ul>
 </nav>

@@ -13,6 +13,26 @@
         height: 90vh;
    }
 
+   /* Forzar que el dropdown se alinee a la derecha del botón
+      y crezca hacia la izquierda (hacia adentro) */
+   details.dropdown ul[role="listbox"] {
+       left: auto;
+       right: 0;
+       min-width: 200px; /* Ancho consistente para el menú */
+   }
+
+   /* Ajuste opcional para que los items del formulario (Logout)
+      no tengan márgenes extraños dentro del menú */
+   details.dropdown ul li form {
+       margin-bottom: 0;
+   }
+
+   details.dropdown ul li button {
+       border: none;
+       justify-content: flex-start;
+       padding: calc(var(--pico-nav-link-spacing-vertical) * 0.5) var(--pico-nav-link-spacing-horizontal);
+   }
+
     
 /* ==========================================
    2. WELCOME PAGE
@@ -41,13 +61,23 @@
    3. CATEGORIES MODULE
    ========================================== */
 
+.categories-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrado horizontal (izquierda-derecha) */
+    text-align: center;
+    width: 100%;
+    padding: 2rem 0;     /* Espacio arriba y abajo para que no pegue al nav ni al final */
+}
+
 #categories-list {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
-    justify-content: center; /* Centra la cuadrícula en la pantalla */
-    padding: 20px;
-    width: 50%;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 1rem;
 }
 
 .cat-card {
@@ -352,3 +382,112 @@ body.htmx-request .cat-button {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
+/*
+===========================
+print report
+=============
+ */
+@media print {
+    /* Ocultar navegación, botones y formularios al imprimir */
+    nav,
+    form,
+    footer button,
+    .htmx-indicator {
+        display: none !important;
+    }
+
+    /* Ajustar el contenedor para que ocupe toda la hoja */
+    article {
+        border: none;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Asegurar que el color de la marca (el total) se imprima */
+    mark {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+/* ==========================================
+   5. REPORT LAYOUT (SIDEBAR & MAIN)
+   ========================================== */
+
+/* Contenedor Grid */
+.report-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Por defecto 1 columna (Mobile) */
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (min-width: 992px) {
+    .report-grid {
+        grid-template-columns: 320px 1fr; /* Sidebar fija en Desktop */
+    }
+
+    /* En desktop, quitamos el estilo de botón al summary y forzamos que esté abierto */
+    .report-sidebar details summary {
+        display: none; /* Escondemos el botón de "Filtros" en PC */
+    }
+
+    .report-sidebar details[open] {
+        margin-bottom: 0;
+    }
+}
+
+/* Área de scroll para categorías para que no sea infinita */
+.category-scroll-area {
+    max-height: 250px;
+    overflow-y: auto;
+    padding: 0.5rem;
+    background: var(--pico-card-sectioning-background-color);
+    border-radius: var(--pico-border-radius);
+    margin-bottom: 1rem;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.checkbox-item input {
+    margin-bottom: 0 !important;
+}
+
+.checkbox-item label {
+    margin-bottom: 0 !important;
+    font-size: 0.9rem;
+}
+
+/* Botón colapsable en Mobile */
+.hamburger-button {
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+/* Ajustes de inputs en el sidebar */
+.filter-form label {
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.filter-form input, .filter-form select {
+    margin-bottom: 0.5rem;
+}
+
+/* Estilo para el indicador de carga */
+.htmx-indicator {
+    display: none;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--pico-primary);
+}
+.htmx-request .htmx-indicator {
+    display: block;
+}
+
