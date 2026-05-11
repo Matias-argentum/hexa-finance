@@ -5,7 +5,6 @@ import com.mat.hexa_finance.application.ports.out.transaction.DeleteTransactionP
 import com.mat.hexa_finance.application.ports.out.transaction.LoadTransactionsPort;
 import com.mat.hexa_finance.application.ports.out.transaction.SaveTransactionPort;
 import com.mat.hexa_finance.domain.exception.CategoryNotFoundException;
-import com.mat.hexa_finance.domain.exception.TransactionNotFoundException;
 import com.mat.hexa_finance.domain.model.Transaction;
 import com.mat.hexa_finance.domain.model.TransactionDetail;
 import com.mat.hexa_finance.infrastructure.adapters.out.persistence.category.CategoryEntity;

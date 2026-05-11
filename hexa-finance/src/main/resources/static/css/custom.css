@@ -391,6 +391,7 @@ print report
     /* Ocultar navegación, botones y formularios al imprimir */
     nav,
     form,
+    aside,
     footer button,
     .htmx-indicator {
         display: none !important;

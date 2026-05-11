@@ -31,18 +31,18 @@ public interface JpaTransactionRepository extends JpaRepository<TransactionEntit
     Optional<TransactionEntity> findByIdAndUserId(@Param("id") Long od, @Param("userId") Long userId);
 
     @Query("""
-            SELECT new com.mat.hexa_finance.infrastructure.adapters.out.persistence.report.CategoryReportProjection(
-                t.category.name, 
-                SUM(t.amount)
-            )
-            FROM TransactionEntity t
-            WHERE t.user.id = :userId
-            AND
-            (:categoryIds IS NULL OR t.category.id IN (:categoryIds))
-            AND
-            t.date BETWEEN :from AND :to
-            AND t.type = :type
-            GROUP BY t.category.name
+                SELECT new com.mat.hexa_finance.infrastructure.adapters.out.persistence.report.CategoryReportProjection(
+                    c.name,
+                    COALESCE(SUM(t.amount), 0)
+                )
+                FROM CategoryEntity c
+                LEFT JOIN TransactionEntity t ON t.category.id = c.id 
+                    AND t.user.id = :userId 
+                    AND t.type = :type 
+                    AND t.date BETWEEN :from AND :to
+                WHERE c.id IN :categoryIds
+                GROUP BY c.id, c.name
+                ORDER BY c.name ASC
             """)
     List<CategoryReportProjection> findReport(@Param("userId") Long userId,
                                               @Param("from") LocalDate from,
@@ -50,3 +50,4 @@ public interface JpaTransactionRepository extends JpaRepository<TransactionEntit
                                               @Param("type") TransactionType type,
                                               @Param("categoryIds") List<Long> categoryIds);
 }
+
