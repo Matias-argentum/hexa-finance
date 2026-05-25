@@ -1,0 +1,72 @@
+<dialog th:fragment="recurring-transaction-modal" id="modal-recurring-transaction" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="document.getElementById('modal-recurring-transaction').remove()"></button>
+            <h3 th:text="${recurringTransaction != null ? 'Editar Transacción recurrente' : 'Nueva Transacción recurrente'}"></h3>
+        </header>
+
+        <form th:attr="
+                hx-post=${recurringTransaction == null ? '/recurring' : null},
+                hx-put=${recurringTransaction != null ? '/recurring/' + recurringTransaction.id : null},
+                hx-target=${recurringTransaction == null ? '#modal-container' : '#recurring-transaction-' + recurringTransaction.id}"
+              hx-swap="innerHTML">
+
+            <input type="hidden" th:if="${recurringTransaction != null}" name="id" th:value="${recurringTransaction.id}">
+
+            <div class="grid">
+                <label for="amount">
+                    Monto
+                    <input type="number" id="amount" name="amount" step="0.01"
+                           th:value="${recurringTransaction != null ? recurringTransaction.amount : ''}"
+                           placeholder="0.00"
+                           min="0"
+                           required>
+                </label>
+
+                <label for="type">
+                    Tipo
+                    <select id="type" name="type" required>
+                        <option value="EXPENSE" th:selected="${recurringTransaction != null && recurringTransaction.type.name() == 'EXPENSE'}">Gasto</option>
+                        <option value="INCOME" th:selected="${recurringTransaction != null && recurringTransaction.type.name() == 'INCOME'}">Ingreso</option>
+                    </select>
+                </label>
+            </div>
+
+            <label for="description">Descripción</label>
+            <input type="text" id="description" name="description"
+                   th:value="${recurringTransaction != null ? recurringTransaction.description : ''}"
+                   placeholder="Ej: Seguro mensual autor" required>
+
+            <div class="grid">
+                <label for="category">
+                    Categoría
+                    <select id="category" name="categoryId" required>
+                        <option value="" disabled th:selected="${recurringTransaction == null}">Seleccionar...</option>
+                        <option th:each="cat : ${categories}"
+                                th:value="${cat.id}"
+                                th:text="${cat.name}"
+                                th:selected="${recurringTransaction != null && recurringTransaction.categoryName == cat.name}"></option>
+                    </select>
+                </label>
+
+                <label for="day-of-month">
+                    Día del mes en que se registra
+                    <input type="number" id="day-of-month" name="dayOfMonth"
+                           th:value="${recurringTransaction != null ? recurringTransaction.dayOfMonth : 0}"
+                           min="1"
+                           max="28"
+                           required>
+                </label>
+            </div>
+
+            <footer>
+                <button type="button" class="secondary"
+                        onclick="document.getElementById('modal-recurring-transaction').remove()">
+                    Cancelar
+                </button>
+                <button type="submit" th:text="${recurringTransaction != null ? 'Actualizar' : 'Guardar'}"></button>
+            </footer>
+        </form>
+    </article>
+</dialog>

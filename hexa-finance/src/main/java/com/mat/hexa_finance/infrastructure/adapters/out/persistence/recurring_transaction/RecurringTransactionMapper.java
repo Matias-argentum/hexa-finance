@@ -16,6 +16,7 @@ public class RecurringTransactionMapper {
         recurringTransaction.setUserId(entity.getUser().getId());
         recurringTransaction.setDayOfMonth(entity.getDayOfMonth());
         recurringTransaction.setActive(entity.isActive());
+        recurringTransaction.setLastExecutedAt(entity.getLastExecutedAt());
 
         return recurringTransaction;
     }
@@ -48,6 +49,7 @@ public class RecurringTransactionMapper {
         recurringTransactionDetail.setLastExecutedAt(entity.getLastExecutedAt());
         recurringTransactionDetail.setUserId(entity.getUser().getId());
         recurringTransactionDetail.setType(entity.getType());
+        recurringTransactionDetail.setLastExecutedAt(entity.getLastExecutedAt());
 
         return recurringTransactionDetail;
     }

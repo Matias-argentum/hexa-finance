@@ -1,0 +1,27 @@
+<dialog id="recurring-transaction-alert-modal" th:fragment="recurring-transaction-alert-modal" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="this.closest('dialog').remove()"></button>
+            <h3>Eliminar</h3>
+        </header>
+
+        <div>
+            <h4 th:text="'¿Seguro que quiere borrar esta transacción recurrente: ' + ${rt.description}"></h4>
+            <p>Las transacciones que ya han sido registradas de forma automática seguirán estando.</p>
+            <p></p>
+            <footer style="display:flex; gap:1rem; justify-content:flex-end;">
+                <div>
+                    <button type="button" class="secondary"
+                            onclick="this.closest('dialog').remove()">Cancelar</button>
+                    <button type="button"
+                            class="primary"
+                            th:hx-delete="@{/recurring/{id}(id=${rt.id})}"
+                            th:hx-target="'#recurring-transaction-' + ${rt.id}"
+                            hx-swap="delete"
+                            hx-disabled-elt="this">Eliminar</button>
+                </div>
+            </footer>
+        </div>
+    </article>
+</dialog>

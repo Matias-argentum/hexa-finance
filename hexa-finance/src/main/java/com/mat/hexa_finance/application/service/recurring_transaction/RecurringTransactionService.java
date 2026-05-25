@@ -10,6 +10,7 @@ import com.mat.hexa_finance.domain.exception.BadTransactionFieldException;
 import com.mat.hexa_finance.domain.exception.RecurringTransactionNotFoundException;
 import com.mat.hexa_finance.domain.model.RecurringTransaction;
 import com.mat.hexa_finance.domain.model.RecurringTransactionDetail;
+import com.mat.hexa_finance.infrastructure.adapters.out.persistence.recurring_transaction.RecurringTransactionMapper;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,7 +19,8 @@ public class RecurringTransactionService implements SaveRecurringTransactionUser
         FindAllRecurringTransactionsUseCase,
         GetRecurringTransactionUseCase,
         DeleteRecurringTransactionUseCase,
-        UpdateRecurringTransactionUseCase {
+        UpdateRecurringTransactionUseCase,
+        ToggleRecurringTransactionStatus{
 
     private final DeleteRecurringTransactionPort deleteRecurringTransactionPort;
     private final SaveRecurringTransactionPort saveRecurringTransactionPort;
@@ -93,5 +95,18 @@ public class RecurringTransactionService implements SaveRecurringTransactionUser
         recurringTransaction.setActive(command.isActive());
 
         return saveRecurringTransactionPort.save(recurringTransaction);
+    }
+
+    @Override
+    public RecurringTransactionDetail execute(Long id, Long userId) {
+        RecurringTransaction foundRecurringTransaction = loadRecurringTransactionsPort.getByIdAndUserId(id, userId)
+                .orElseThrow(() -> new RecurringTransactionNotFoundException("Recurring transaction not found"));
+
+        foundRecurringTransaction.setActive(!foundRecurringTransaction.isActive());
+
+        RecurringTransaction updatedRecurringTransaction = saveRecurringTransactionPort.save(foundRecurringTransaction);
+
+        return loadRecurringTransactionsPort.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new RecurringTransactionNotFoundException("Recurring transaction not found"));
     }
 }

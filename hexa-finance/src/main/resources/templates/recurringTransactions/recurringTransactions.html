@@ -1,0 +1,32 @@
+<div class="container" th:fragment="recurringTransactions-content">
+    <div class="grid">
+        <div><h2>Transacciones Automatizadas</h2></div>
+        <div style="text-align: right;">
+            <button
+                    hx-get="/recurring/new"
+                    hx-target="#modal-container"
+                    >
+                + Nueva Transacción recurrente
+            </button>
+        </div>
+    </div>
+
+    <!-- contenedor vacio para que htmx deje el modal -->
+    <div id="modal-container"></div>
+
+    <hr>
+
+    <div id="recurring-transactions-list">
+        <br>
+
+        <th:block th:each="rt : ${recurringTransactions}">
+            <div th:replace="~{recurringTransactions/fragments/recurring-transaction-card :: recurring-card(${rt})}"></div>
+        </th:block>
+        <p th:if="${#lists.isEmpty(recurringTransactions)}"> Aun no hay transacciones recurrentes registradas.
+            Crea una y el sistema registrará automáticamente un movimiento cada mes en el día que elijas.</p>
+    </div>
+
+</div>
+
+
+

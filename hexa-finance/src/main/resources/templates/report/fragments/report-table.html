@@ -29,14 +29,14 @@
             <tbody>
             <tr th:each="item : ${report.categories}">
                 <td th:text="${item.categoryName}">Categoría</td>
-                <td style="text-align: right;" th:text="'$' + ${item.amount}">$0.00</td>
+                <td style="text-align: right;" th:text="'$' + ${#numbers.formatDecimal(item.amount, 1, 'POINT', 2, 'COMMA')}">$0.00</td>
             </tr>
             </tbody>
             <tfoot>
             <tr>
                 <td><strong>TOTAL GENERAL</strong></td>
                 <td style="text-align: right;">
-                    <mark><strong th:text="'$' + ${report.grandTotal}">$0.00</strong></mark>
+                    <mark><strong th:text="'$' + ${#numbers.formatDecimal(report.grandTotal, 1, 'POINT', 2, 'COMMA')}">$0.00</strong></mark>
                 </td>
             </tr>
             </tfoot>

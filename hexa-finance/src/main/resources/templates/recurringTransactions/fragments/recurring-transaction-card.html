@@ -1,0 +1,65 @@
+<article th:fragment="recurring-card(rt)"
+         th:id="'recurring-transaction-' + ${rt.id}"
+         class="recurring-card">
+
+    <div class="grid">
+        <!-- Lado Izquierdo: Info Principal -->
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                <i th:class="'ti ti-' + ${rt.categoryIcon}" style="font-size: 1.5rem;"></i>
+                <strong th:text="${rt.categoryName}">Categoría</strong>
+                <span th:if="${!rt.active}" class="badge-paused"
+                      style="background: var(--secondary-focus); font-size: 0.7rem; padding: 2px 8px; border-radius: 4px;">
+                    PAUSADA
+                </span>
+            </div>
+            <h3 th:text="${'$' + #numbers.formatDecimal(rt.amount, 1, 'POINT', 2, 'COMMA')}"
+                th:style="${rt.type.name() == 'EXPENSE' ? 'color: var(--pico-ins-color); margin:0;' : 'color: var(--pico-mark-color); margin:0;'}">
+            </h3>
+            <small th:text="${rt.description}"></small>
+        </div>
+
+        <!-- Lado Derecho: Meta y Acciones -->
+        <div style="text-align: right;">
+            <p style="margin-bottom: 0.5rem;">
+                <kbd>Se registra el <span th:text="${rt.dayOfMonth}"></span> de cada mes</kbd>
+            </p>
+
+            <div class="grid" style="--pico-grid-spacing-horizontal: 0.5rem;">
+                <!-- Botón Toggle Activo/Pausado -->
+                <button class="outline"
+                        th:classappend="${rt.active ? 'secondary' : 'contrast'}"
+                        th:hx-patch="'/recurring/' + ${rt.id} + '/toggle'"
+                        th:hx-target="'#recurring-transaction-' + ${rt.id}"
+                        hx-swap="outerHTML"
+                        th:title="${rt.active ? 'Pausar' : 'Reactivar'}"
+                >
+                    <i th:class="${rt.active ? 'ti ti-player-pause' : 'ti ti-player-play'}"></i>
+
+                </button>
+
+                <!-- Boton de editar  -->
+                <button class="outline"
+                        th:hx-get="'/recurring/' + ${rt.id} + '/edit'"
+                        hx-target="#modal-container">
+                    <i class="ti ti-edit"></i>
+                </button>
+
+                <!-- Boton de borrador -->
+                <button class="outline error"
+                        th:hx-get="@{/recurring/{id}/delete-confirm(id=${rt.id})}"
+                        hx-target="#modal-container"
+                        >
+                    <i class="ti ti-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <small>
+            Última ejecución:
+            <span th:text="${rt.lastExecutedAt != null ? #temporals.format(rt.lastExecutedAt, 'dd/MM/yyyy') : 'Nunca'}"></span>
+        </small>
+    </footer>
+</article>

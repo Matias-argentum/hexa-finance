@@ -2,7 +2,7 @@
     <h2 th:text="'Hola, ' + ${username}">Mi Dashboard</h2>
 
     <div style="margin-bottom: 2rem;">
-        <label for="month-filter">Filtrar por periodo:</label>
+        <label for="month-filter">Filtrar por mes y año:</label>
         <input type="month"
                id="month-filter"
                name="month"
@@ -17,24 +17,21 @@
         <article>
             <header>Ingresos</header>
             <h3 style="color: #2ecc71;"
-                th:text="${summary != null ? '$' + summary.totalIncome : '$0'}">
-                $0
+                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.totalIncome, 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
             </h3>
         </article>
 
         <article>
             <header>Egresos</header>
             <h3 style="color: #e74c3c;"
-                th:text="${summary != null ? '$' + summary.totalExpense : '$0'}">
-                $0
+                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.totalExpense, 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
             </h3>
         </article>
 
         <article>
             <header>Balance Neto</header>
             <h3 th:style="'color: ' + (${summary != null && summary.calculateBalance() >= 0} ? '#2ecc71' : '#e74c3c')"
-                th:text="${summary != null ? '$' + summary.calculateBalance() : '$0'}">
-                $0
+                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.calculateBalance(), 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
             </h3>
         </article>
     </div>

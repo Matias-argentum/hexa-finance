@@ -4,7 +4,6 @@ import com.mat.hexa_finance.application.ports.in.category.FindAllCategoriesUseCa
 import com.mat.hexa_finance.application.ports.in.transaction.*;
 import com.mat.hexa_finance.application.ports.in.transaction.command.CreateTransactionCommand;
 import com.mat.hexa_finance.application.ports.in.transaction.command.UpdateTransactionCommand;
-import com.mat.hexa_finance.domain.model.Category;
 import com.mat.hexa_finance.domain.model.Transaction;
 import com.mat.hexa_finance.domain.model.TransactionType;
 import com.mat.hexa_finance.infrastructure.adapters.in.web.auth.model.CustomUserDetails;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -200,7 +198,7 @@ public class TransactionController {
 
         Transaction retrievedTransaction = getTransactionUseCase.executeFindById(id);
 
-        System.out.println(retrievedTransaction.getType());
+        //System.out.println(retrievedTransaction.getType());
 
         model.addAttribute("t", retrievedTransaction);
         return "transactions/fragments/transactions-fragments :: transaction-alert-modal";
@@ -208,7 +206,7 @@ public class TransactionController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id,
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id,
                                                @AuthenticationPrincipal CustomUserDetails user,
                                                HttpServletResponse response) {
 

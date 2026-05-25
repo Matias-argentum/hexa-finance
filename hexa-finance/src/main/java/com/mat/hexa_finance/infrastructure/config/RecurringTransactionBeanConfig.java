@@ -10,9 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RecurringTransactionBeanConfig {
     @Bean
-    RecurringTransactionService recurringTransactionService(SaveRecurringTransactionPort saveRecurringTransactionPort,
-                                                            LoadRecurringTransactionsPort loadRecurringTransactionsPort,
-                                                            DeleteRecurringTransactionPort deleteRecurringTransactionPort){
+    RecurringTransactionService recurringTransactionService(DeleteRecurringTransactionPort deleteRecurringTransactionPort,
+                                                            SaveRecurringTransactionPort saveRecurringTransactionPort,
+                                                            LoadRecurringTransactionsPort loadRecurringTransactionsPort
+    ) {
         return new RecurringTransactionService(deleteRecurringTransactionPort, saveRecurringTransactionPort, loadRecurringTransactionsPort);
     }
 }

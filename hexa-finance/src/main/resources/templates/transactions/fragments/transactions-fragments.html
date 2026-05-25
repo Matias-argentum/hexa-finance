@@ -80,8 +80,8 @@
                   th:text="${t.type}"></span>
 
             <div class="amount-category">
-                            <span class="amount-text"
-                                  th:text="${(t.type == 'Gasto' ? '-' : '+') + '$' + t.amount}"></span>
+                <span   class="amount-text"
+                        th:text="${#numbers.formatDecimal(t.amount, 1, 'POINT', 2, 'COMMA')}"></span>
                 <div class="category-info">
                     <i th:class="'ti ti-' + ${t.categoryIcon}"></i>
                     <span th:text="${t.categoryName}"></span>

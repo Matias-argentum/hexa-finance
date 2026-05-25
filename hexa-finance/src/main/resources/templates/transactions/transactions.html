@@ -29,6 +29,7 @@
     <th:block th:each="t : ${page.content}">
         <div th:replace="~{transactions/fragments/transactions-fragments :: transaction-card(t=${t})}"></div>
     </th:block>
+    <p th:if="${#lists.isEmpty(page.content)}"> No hay transacciones que coincidan con estos filtros.</p>
 
     <nav aria-label="pagination">
         <ul>

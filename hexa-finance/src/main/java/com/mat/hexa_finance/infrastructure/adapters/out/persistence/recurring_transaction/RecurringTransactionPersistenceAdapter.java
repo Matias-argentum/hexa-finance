@@ -11,10 +11,12 @@ import com.mat.hexa_finance.infrastructure.adapters.out.persistence.category.Jpa
 import com.mat.hexa_finance.infrastructure.adapters.out.persistence.user.JpaUserRepository;
 import com.mat.hexa_finance.infrastructure.adapters.out.persistence.user.UserEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class RecurringTransactionPersistenceAdapter implements
         LoadRecurringTransactionsPort,
         SaveRecurringTransactionPort,
@@ -37,9 +39,22 @@ public class RecurringTransactionPersistenceAdapter implements
     }
 
     @Override
+    public List<RecurringTransaction> findAllByDayOfMonth(int dayOfMonth) {
+
+        return recurringTransactionRepository.findAllByDayOfMonth(dayOfMonth).stream()
+                .map(RecurringTransactionMapper::toDomain).toList();
+    }
+
+    @Override
     public Optional<RecurringTransactionDetail> findByIdAndUserId(Long id, Long userId) {
         Optional<RecurringTransactionEntity> recurringTransactionEntity = recurringTransactionRepository.findByIdAndUserId(id, userId);
         return recurringTransactionEntity.map(RecurringTransactionMapper::toDetailedDomain);
+    }
+
+    @Override
+    public Optional<RecurringTransaction> getByIdAndUserId(Long id, Long userId) {
+        return recurringTransactionRepository.findByIdAndUserId(id, userId)
+                .map(RecurringTransactionMapper::toDomain);
     }
 
     @Override

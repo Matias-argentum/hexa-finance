@@ -14,4 +14,7 @@ public interface JpaRecurringTransactionRepository extends JpaRepository<Recurri
 
     @Query("SELECT rt FROM RecurringTransactionEntity rt JOIN FETCH rt.category WHERE rt.id = :id AND rt.user.id = :userId")
     Optional<RecurringTransactionEntity> findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
+
+    @Query("SELECT rt FROM RecurringTransactionEntity rt WHERE dayOfMonth = :dayOfMonth AND isActive = TRUE")
+    List<RecurringTransactionEntity> findAllByDayOfMonth(@Param("dayOfMonth") int dayOfMonth);
 }
