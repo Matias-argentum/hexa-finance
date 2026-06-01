@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es"
+      data-theme="dark"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Error en el Servidor - 500</title>
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+
+    <link rel="stylesheet" th:href="@{/css/vendor/pico.cyan.min.css}">
+
+    <link rel="stylesheet" th:href="@{/css/vendor/tabler-icons.min.css}">
+</head>
+<body class="container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; text-align: center;">
+
+<hgroup>
+    <h1 style="color: var(--pico-secondary); font-size: 4rem; margin-bottom: 0;">500</h1>
+    <h2>Error interno del servidor</h2>
+</hgroup>
+<p style="max-width: 500px; color: var(--pico-muted-color);">
+    ¡Ups! Algo salió mal de nuestro lado. Ya estamos trabajando para solucionarlo.
+</p>
+<a href="/" role="button" class="secondary">Ir al Inicio</a>
+
+</body>
+</html>

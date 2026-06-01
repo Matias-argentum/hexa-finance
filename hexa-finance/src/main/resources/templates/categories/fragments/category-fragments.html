@@ -82,32 +82,86 @@
             <input type="text" id="name" name="name" placeholder="Ej: Comida" required>
 
             <fieldset>
-                <legend>Icono</legend>
+                <legend>Icono de la Categoría</legend>
 
-                <label>
-                    <input type="radio" name="iconName" value="cash" required>
-                    <i class="ti ti-cash"></i> Dinero
-                </label>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.5rem; font-size: 0.9rem;">
 
-                <label>
-                    <input type="radio" name="iconName" value="shopping-cart">
-                    <i class="ti ti-shopping-cart"></i> Compras
-                </label>
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="utensils" required>
+                        <i class="ti ti-tools-kitchen-2"></i> Comida
+                    </label>
 
-                <label>
-                    <input type="radio" name="iconName" value="home">
-                    <i class="ti ti-home"></i> Hogar
-                </label>
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="home">
+                        <i class="ti ti-home"></i> Hogar
+                    </label>
 
-                <label>
-                    <input type="radio" name="iconName" value="trending-up">
-                    <i class="ti ti-trending-up"></i> Ingresos
-                </label>
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="car">
+                        <i class="ti ti-car"></i> Transp.
+                    </label>
 
-                <label>
-                    <input type="radio" name="iconName" value="trending-down">
-                    <i class="ti ti-trending-down"></i> Egresos
-                </label>
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="heart-medical">
+                        <i class="ti ti-report-medical"></i> Salud
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="device-gamepad-2">
+                        <i class="ti ti-ball-football"></i> Ocio
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="book">
+                        <i class="ti ti-book"></i> Estudios
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="shirt">
+                        <i class="ti ti-shirt"></i> Ropa
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="bolt">
+                        <i class="ti ti-bolt"></i> Servicios
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="gift">
+                        <i class="ti ti-gift"></i> Regalos
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="paw">
+                        <i class="ti ti-paw"></i> Mascotas
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="briefcase">
+                        <i class="ti ti-briefcase"></i> Trabajo
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="trending-up">
+                        <i class="ti ti-trending-up"></i> Inversión
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="receipt">
+                        <i class="ti ti-receipt"></i> Gastos
+                    </label>
+
+                    <label style="margin-bottom: 0; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="cash">
+                        <i class="ti ti-cash"></i> Efectivo
+                    </label>
+
+                    <label style="margin-bottom: 0; pointer-events: auto; display: flex; align-items: center; gap: 0.25rem;">
+                        <input type="radio" name="iconName" value="pig-money">
+                        <i class="ti ti-shopping-cart"></i> Supermercado
+                    </label>
+
+                </div>
             </fieldset>
             <footer style="display:flex; gap:1rem; justify-content:flex-end;">
                 <button type="button" class="secondary"

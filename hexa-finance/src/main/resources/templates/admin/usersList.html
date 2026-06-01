@@ -1,0 +1,32 @@
+<div class="container" th:fragment="usersList">
+    <div>
+        <div><h2>Usuarios Registrados</h2></div>
+    </div>
+
+    <!-- contenedor vacio para que htmx deje el modal -->
+    <div id="modal-container"></div>
+
+    <hr>
+
+    <table id="users-table">
+        <thead>
+            <th>Id</th>
+            <th>Rol</th>
+            <th>Activo</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>ForcePasswordChange</th>
+            <th>toggle status</th>
+            <th>reset password</th>
+        </thead>
+
+        <th:block th:each="user : ${users}">
+            <div th:replace="~{admin/fragments/admin-fragments :: user-row(${user})}"></div>
+        </th:block>
+    </table>
+    <p th:if="${#lists.isEmpty(users)}"> No hay usuarios registrados.</p>
+
+</div>
+
+
+

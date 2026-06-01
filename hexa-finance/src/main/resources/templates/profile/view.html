@@ -1,0 +1,51 @@
+<section th:fragment="profile-content" class="container" id="profile-container">
+    <h2>Mi Perfil</h2>
+
+    <hr>
+
+    <div class="grid">
+        <div>
+            <label>Correo Electrónico</label>
+            <h3 th:text="${currentUser.email}"></h3>
+        </div>
+        <button class="primary"
+                hx-get="/profile/change-email"
+                hx-target="#modal-container">
+                Modificar
+        </button>
+    </div>
+
+    <hr>
+
+    <div class="grid">
+        <div>
+            <label>Nombre de Usuario</label>
+            <h3 th:text="${currentUser.username}"></h3>
+        </div>
+
+        <button class="primary"
+                hx-get="/profile/change-username"
+                hx-target="#modal-container">
+            Modificar
+        </button>
+    </div>
+
+    <hr>
+
+    <div class="grid">
+        <div>
+            <label>Password</label>
+            <h3 >*******</h3>
+        </div>
+
+        <button class="primary"
+                hx-get="/profile/change-password"
+                hx-target="#modal-container">
+            Modificar
+        </button>
+    </div>
+
+    <div id="modal-container">
+
+    </div>
+</section>

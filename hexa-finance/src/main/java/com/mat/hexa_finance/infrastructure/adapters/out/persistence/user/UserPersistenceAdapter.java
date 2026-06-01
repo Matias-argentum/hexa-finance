@@ -1,14 +1,17 @@
 package com.mat.hexa_finance.infrastructure.adapters.out.persistence.user;
 
+import com.mat.hexa_finance.application.ports.out.admin.LoadAllUsersPort;
 import com.mat.hexa_finance.application.ports.out.user.LoadUserPort;
 import com.mat.hexa_finance.application.ports.out.user.SaveUserPort;
 import com.mat.hexa_finance.domain.model.User;
+import com.mat.hexa_finance.infrastructure.adapters.in.web.auth.model.CustomUserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
-public class UserPersistenceAdapter implements LoadUserPort, SaveUserPort {
+public class UserPersistenceAdapter implements LoadUserPort, SaveUserPort, LoadAllUsersPort {
 
     private final JpaUserRepository repository;
 
@@ -33,5 +36,10 @@ public class UserPersistenceAdapter implements LoadUserPort, SaveUserPort {
     public User save(User user) {
         UserEntity entity = UserMapper.toEntity(user);
         return UserMapper.toDomain(repository.save(entity));
+    }
+
+    @Override
+    public List<User> findAll() {
+        return repository.findAll().stream().map(UserMapper::toDomain).toList();
     }
 }

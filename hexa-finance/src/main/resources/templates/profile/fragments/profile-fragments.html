@@ -1,0 +1,80 @@
+<!-- MODAL PARA ACTUALIZAR EMAIL -->
+<dialog id="change-email-modal" th:fragment="change-email-modal" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="document.getElementById('change-email-modal').remove()"></button>
+            <h3>Actualizar mi email</h3>
+        </header>
+
+        <form hx-post="/profile/update-email"
+              hx-target="#modal-container"
+              hx-confirm="¿Estás seguro? Al cambiar este dato se cerrará tu sesión actual por seguridad y deberás volver a ingresar."
+              hx-swap="innerHTML">
+            <label for="newEmail">Nuevo email</label>
+            <input type="email" id="newEmail" name="newEmail" placeholder="nuevo@email.com" required>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" placeholder="*********" required>
+            <footer style="display:flex; gap:1rem; justify-content:flex-end;">
+                <button type="button" class="secondary"
+                        onclick="document.getElementById('change-email-modal').remove()">Cancelar</button>
+                <button type="submit" hx-disabled-elt="this">Actualizar</button>
+            </footer>
+        </form>
+    </article>
+</dialog>
+
+
+<!-- MODAL PARA ACTUALIZAR USERNAME -->
+<dialog id="change-username-modal" th:fragment="change-username-modal" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="document.getElementById('change-username-modal').remove()"></button>
+            <h3>Actualizar mi nombre de usuario</h3>
+        </header>
+
+        <form hx-post="/profile/update-username"
+              hx-confirm="¿Estás seguro? Al cambiar este dato se cerrará tu sesión actual por seguridad y deberás volver a ingresar."
+              hx-target="#modal-container"
+              hx-swap="innerHTML">
+            <label for="username">Nombre de Usuario</label>
+            <input type="text" id="username" name="newUsername" placeholder="nombre" required>
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" placeholder="*********" required>
+            <footer style="display:flex; gap:1rem; justify-content:flex-end;">
+                <button type="button" class="secondary"
+                        onclick="document.getElementById('change-username-modal').remove()">Cancelar</button>
+                <button type="submit" hx-disabled-elt="this">Actualizar</button>
+            </footer>
+        </form>
+    </article>
+</dialog>
+
+<!-- MODAL PARA ACTUALIZAR PASSWORD -->
+<dialog id="change-password-modal" th:fragment="change-password-modal" open>
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev"
+                    onclick="document.getElementById('change-password-modal').remove()"></button>
+            <h3>Actualizar mi contraseña</h3>
+        </header>
+
+        <form hx-post="/profile/update-password"
+              hx-target="#modal-container"
+              hx-confirm="¿Estás seguro? Al cambiar este dato se cerrará tu sesión actual por seguridad y deberás volver a ingresar."
+              hx-swap="innerHTML">
+            <label for="newEmail">Nueva contraseña</label>
+            <input type="password" id="newPassword" name="newPassword" placeholder="nuevoPassword" required>
+            <label for="password">Contraseña actual</label>
+            <input type="password" id="currentPassword" name="currentPassword" placeholder="passwordActual" required>
+            <footer style="display:flex; gap:1rem; justify-content:flex-end;">
+                <button type="button" class="secondary"
+                        onclick="document.getElementById('change-password-modal').remove()">Cancelar</button>
+                <button type="submit" hx-disabled-elt="this">Actualizar</button>
+            </footer>
+        </form>
+    </article>
+</dialog>
+
+

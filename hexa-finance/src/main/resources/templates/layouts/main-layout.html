@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="es"
+      data-theme="dark"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
@@ -7,17 +8,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lita</title>
-    <!-- custom styling -->
-    <link rel="stylesheet" href="/css/custom.css">
-    <!-- Pico CSS for styling -->
-    <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.cyan.min.css"
-    >
-    <!-- Tabler icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.35.0/tabler-icons.min.css"
-          integrity="sha512-gzw5zNP2TRq+DKyAqZfDclaTG4dOrGJrwob2Fc8xwcJPDPVij0HowLIMZ8c1NefFM0OZZYUUUNoPfcoI5jqudw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+
+    <link rel="stylesheet" th:href="@{/css/vendor/pico.cyan.min.css}">
+
+    <link rel="stylesheet" th:href="@{/css/vendor/tabler-icons.min.css}">
     <!-- HTMX library -->
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
             integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
@@ -44,6 +39,11 @@
                     <li><a href="/categories">Categorías</a></li>
                     <li><a href="/reports">Reportes</a></li>
                     <li><a href="/profile">Mi Perfil</a></li>
+                    <li sec:authorize="hasRole('ADMIN')">
+                        <div >
+                            <a href="/admin">Panel de Administración</a>
+                        </div>
+                    </li>
                     <li>
                         <form hx-post="/logout" hx-target="body">
                             <button type="submit" class="outline contrast" style="width: 100%">Logout</button>
@@ -61,6 +61,14 @@
 <div id="modal-container"></div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const sessionMessage = sessionStorage.getItem('toastMessage');
+        if (sessionMessage) {
+            sessionStorage.removeItem('toastMessage'); // Lo borramos para que no repita al refrescar
+            document.body.dispatchEvent(new CustomEvent('notify', {
+                detail: { message: sessionMessage }
+            }));
+            return;
+        }
         const params = new URLSearchParams(window.location.search);
 
         let message = '';
@@ -68,6 +76,7 @@
         if (params.get('success') === 'true') message = "Bienvenido";
         if (params.get('error') === 'true') message = "Credenciales incorrectas.";
         if (params.has('logout')) message = "¡Hasta luego!"
+        if (params.get('dataChanged') === 'true') message = "Tus datos han cambiado. Por seguridad, vuelve a ingresar.";
 
         if (message) {
             document.body.dispatchEvent(new CustomEvent('notify', {
@@ -75,6 +84,12 @@
             }));
         }
     });
+</script>
+<script>
+    document.body.addEventListener('preSaveToast', (event) => {
+    // Guardamos el texto que mandó el controlador
+    sessionStorage.setItem('toastMessage', event.detail.value);
+});
 </script>
 <script>
     document.body.addEventListener('notify', (event) => {

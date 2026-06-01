@@ -2,6 +2,7 @@ package com.mat.hexa_finance.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
+@EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
 
@@ -21,7 +23,7 @@ public class SecurityConfig {
 
                 // las petiiones a endpoint publicos o registro entran, el resto requiere estar autenticado
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/public/**", "/register", "/css/**", "/js/**", "/images/**")
+                        .requestMatchers("/","/public/**", "/register", "/css/**", "/js/**", "/images/**", "/about", "/error/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

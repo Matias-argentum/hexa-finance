@@ -1,0 +1,32 @@
+<tr th:fragment="user-row(user)"
+    th:id="'user-' + ${user.id}"
+>
+    <td th:text="${user.id}">Id</td>
+    <td th:text="${user.role}">Rol</td>
+    <td th:text="${user.active}">Activo</td>
+    <td th:text="${user.email}">Email</td>
+    <td th:text="${user.username}">Username</td>
+    <td th:text="${user.forcePasswordChange}">ForcePasswordChange</td>
+    <td >
+        <button class="outline"
+                th:classappend="${user.active ? 'secondary' : 'contrast'}"
+                th:hx-patch="'/admin/' + ${user.id} + '/toggle'"
+                th:hx-target="'#user-' + ${user.id}"
+                hx-swap="outerHTML"
+                th:title="${user.active ? 'Pausar' : 'Habilitar'}"
+        >
+            <i th:class="${user.active ? 'ti ti-player-pause' : 'ti ti-player-play'}"></i>
+
+        </button>
+    </td>
+    <td >
+        <button class="outline"
+                th:classappend="${user.active ? 'secondary' : 'contrast'}"
+                th:hx-patch="'/admin/' + ${user.id} + '/reset-password'"
+                th:hx-target="'#user-' + ${user.id}"
+                hx-swap="outerHTML"
+                th:text="${user.forcePasswordChange ? 'Ya forzado' : 'Forzar reset'}"
+        >
+        </button>
+    </td>
+</tr>

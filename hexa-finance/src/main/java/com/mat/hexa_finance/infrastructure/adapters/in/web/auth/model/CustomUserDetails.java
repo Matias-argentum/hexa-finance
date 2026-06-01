@@ -18,9 +18,19 @@ public class CustomUserDetails extends User {
     private boolean forcePasswordChange;
 
     public CustomUserDetails(com.mat.hexa_finance.domain.model.User user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getEmail(), user.getPassword(), authorities);
+        // constructor completo de Spring Security:
+        super(
+                user.getEmail(),
+                user.getPassword(),
+                user.isActive(),  // <--- Si esto es false, Spring Security rebota el login
+                true,             // accountNonExpired
+                true,             // credentialsNonExpired
+                true,             // accountNonLocked
+                authorities
+        );
+
         this.id = user.getId();
-        this.username = user.getUsername(); // El nombre real (no el email)
+        this.username = user.getUsername();
         this.email = user.getEmail();
         this.role = user.getRole();
         this.forcePasswordChange = user.isForcePasswordChange();
