@@ -3,7 +3,6 @@ package com.mat.hexa_finance.infrastructure.adapters.out.persistence.report;
 import com.mat.hexa_finance.application.ports.in.report.query.ReportFilter;
 import com.mat.hexa_finance.application.ports.out.report.LoadReportPort;
 import com.mat.hexa_finance.domain.model.CategoryReport;
-import com.mat.hexa_finance.domain.model.FinancialReport;
 import com.mat.hexa_finance.infrastructure.adapters.out.persistence.transaction.JpaTransactionRepository;
 import org.springframework.stereotype.Component;
 

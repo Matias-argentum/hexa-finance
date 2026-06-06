@@ -61,6 +61,7 @@ public class ProfileService implements UpdateUsernameUseCase, UpdateEmailUseCase
         }
 
         foundUser.setPassword(passwordEncoder.encode(newPassword));
+        foundUser.setForcePasswordChange(false);
 
         return saveUserPort.save(foundUser);
 

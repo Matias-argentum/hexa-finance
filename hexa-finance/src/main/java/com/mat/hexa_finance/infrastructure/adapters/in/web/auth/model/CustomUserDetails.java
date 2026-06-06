@@ -25,7 +25,7 @@ public class CustomUserDetails extends User {
                 user.isActive(),  // <--- Si esto es false, Spring Security rebota el login
                 true,             // accountNonExpired
                 true,             // credentialsNonExpired
-                true,             // accountNonLocked
+                user.isActive(),             // accountNonLocked
                 authorities
         );
 

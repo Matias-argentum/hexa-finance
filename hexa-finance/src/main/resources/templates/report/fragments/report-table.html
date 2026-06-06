@@ -1,7 +1,8 @@
 <div th:fragment="results" id="results-container">
     <article th:if="${report != null}">
         <header>
-            <h3 style="margin-bottom: 0.5rem;">Resumen de Finanzas</h3>
+            <h3 style="margin-bottom: 0.5rem;"
+            <h3 th:text="${report.type.name() == 'EXPENSE' ? 'Resumen de Gastos' : 'Resumen de ingresos'}">Resumen de Finanzas</h3>
             <p style="font-size: 0.9rem; color: var(--pico-secondary-color);">
                 Período:
                 <strong th:text="${#temporals.format(report.from, 'dd/MM/yyyy')}">01/01/2024</strong>

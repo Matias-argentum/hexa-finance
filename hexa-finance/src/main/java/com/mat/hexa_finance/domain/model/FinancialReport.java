@@ -8,6 +8,7 @@ public record FinancialReport(
         LocalDate from,
         LocalDate to,
         List<CategoryReport> categories,
+        TransactionType type,
         BigDecimal grandTotal
 ) {
 }

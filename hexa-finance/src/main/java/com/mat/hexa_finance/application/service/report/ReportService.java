@@ -21,6 +21,6 @@ public class ReportService implements GetReportUseCase {
     public FinancialReport execute(Long userId, ReportFilter reportFilter) {
         List<CategoryReport> categoryReportList = loadReportPort.loadFinancialReport(userId, reportFilter);
         BigDecimal grandTotal = categoryReportList.stream().map(CategoryReport::amount).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return new FinancialReport(reportFilter.from(), reportFilter.to(), categoryReportList, grandTotal);
+        return new FinancialReport(reportFilter.from(), reportFilter.to(), categoryReportList,  reportFilter.type(), grandTotal);
     }
 }
