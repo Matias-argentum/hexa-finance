@@ -1,7 +1,4 @@
 <article th:id="'category-card-' + ${category.id}"  class="cat-card" th:fragment="category-item">
-    <header>
-    </header>
-
     <div class="cat-description">
         <i th:class="'ti ti-' + ${category.iconName}"></i>
         <strong th:text="${category.name}"></strong>
@@ -33,16 +30,6 @@
           hx-target="closest .cat-card"
           hx-swap="outerHTML">
 
-        <header class="cat-edit-header">
-            <button type="button" class="outline secondary cat-button"
-                    hx-disabled-elt="this"
-                    th:hx-get="@{/categories/{id}(id=${category.id})}"
-                    hx-target="closest .cat-card"
-                    hx-swap="outerHTML">
-                <i class="ti ti-x"></i>
-            </button>
-        </header>
-
         <div class="cat-description">
             <input type="hidden" name="id" th:value="${category.id}">
 
@@ -59,6 +46,13 @@
         </div>
 
         <footer style="justify-content: center;">
+            <button type="button" class="outline secondary cat-button"
+                    hx-disabled-elt="this"
+                    th:hx-get="@{/categories/{id}(id=${category.id})}"
+                    hx-target="closest .cat-card"
+                    hx-swap="outerHTML">
+                <i class="ti ti-x"></i>
+            </button>
             <button type="submit" class="cat-button" hx-disabled-elt="this">
                 <i class="ti ti-check"></i>
             </button>

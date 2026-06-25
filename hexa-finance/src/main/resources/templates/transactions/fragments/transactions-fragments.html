@@ -81,7 +81,7 @@
 
             <div class="amount-category">
                 <span   class="amount-text"
-                        th:text="${#numbers.formatDecimal(t.amount, 1, 'POINT', 2, 'COMMA')}"></span>
+                        th:text="${'$' + #numbers.formatDecimal(t.amount, 1, 'POINT', 2, 'COMMA')}"></span>
                 <div class="category-info">
                     <i th:class="'ti ti-' + ${t.categoryIcon}"></i>
                     <span th:text="${t.categoryName}"></span>
@@ -92,14 +92,14 @@
         <div class="transaction-meta">
             <span class="date-text" th:text="${#temporals.format(t.date, 'dd/MM/yyyy')}"></span>
             <div class="actions">
-                <button
+                <button class="transaction-card-buttons"
                         th:hx-get="@{/transactions/{id}/edit(id=${t.id})}"
                         hx-target="#modal-container"
                 >
                     <i class="ti ti-edit"></i>
                 </button>
 
-                <button
+                <button class="transaction-card-buttons"
                         th:hx-get="@{/transactions/{id}/delete-confirm(id=${t.id})}"
                         hx-target="#modal-container"
                 >

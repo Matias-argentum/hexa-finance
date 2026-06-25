@@ -20,14 +20,14 @@
         </div>
 
         <!-- Lado Derecho: Meta y Acciones -->
-        <div style="text-align: right;">
-            <p style="margin-bottom: 0.5rem;">
+        <div class="recurring-transaction-badge">
+            <p>
                 <kbd>Se registra el <span th:text="${rt.dayOfMonth}"></span> de cada mes</kbd>
             </p>
 
-            <div class="grid" style="--pico-grid-spacing-horizontal: 0.5rem;">
+            <div class="recurring-transaction-action-buttons">
                 <!-- Botón Toggle Activo/Pausado -->
-                <button class="outline"
+                <button class="outline recurring-transaction-button"
                         th:classappend="${rt.active ? 'secondary' : 'contrast'}"
                         th:hx-patch="'/recurring/' + ${rt.id} + '/toggle'"
                         th:hx-target="'#recurring-transaction-' + ${rt.id}"
@@ -39,14 +39,14 @@
                 </button>
 
                 <!-- Boton de editar  -->
-                <button class="outline"
+                <button class="outline recurring-transaction-button"
                         th:hx-get="'/recurring/' + ${rt.id} + '/edit'"
                         hx-target="#modal-container">
                     <i class="ti ti-edit"></i>
                 </button>
 
                 <!-- Boton de borrador -->
-                <button class="outline error"
+                <button class="outline error recurring-transaction-button"
                         th:hx-get="@{/recurring/{id}/delete-confirm(id=${rt.id})}"
                         hx-target="#modal-container"
                         >

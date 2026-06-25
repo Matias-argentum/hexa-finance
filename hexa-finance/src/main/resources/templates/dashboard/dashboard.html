@@ -16,21 +16,21 @@
     <div class="grid" id="balance-cards">
         <article>
             <header>Ingresos</header>
-            <h3 style="color: #2ecc71;"
+            <h3 style="color: #beedc8;"
                 th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.totalIncome, 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
             </h3>
         </article>
 
         <article>
             <header>Egresos</header>
-            <h3 style="color: #e74c3c;"
+            <h3 style="color: #f55f5f;"
                 th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.totalExpense, 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
             </h3>
         </article>
 
         <article>
             <header>Balance Neto</header>
-            <h3 th:style="'color: ' + (${summary != null && summary.calculateBalance() >= 0} ? '#2ecc71' : '#e74c3c')"
+            <h3 th:style="'color: ' + (${summary != null && summary.calculateBalance() >= 0} ? '#beedc8' : '#f55f5f')"
                 th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.calculateBalance(), 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
             </h3>
         </article>

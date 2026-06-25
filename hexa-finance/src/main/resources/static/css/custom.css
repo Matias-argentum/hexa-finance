@@ -82,25 +82,28 @@
 
 .cat-card {
     /* Forzamos el tamaño exacto */
-    width: 250px !important;
-    height: 300px !important;
-    flex: 0 0 250px;
+    width: 350px !important;
+    height: 150px !important;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
-    padding: 0; /* Pico maneja padding en header/footer */
+    padding: 0;
     margin: 0;
     position: relative;
 }
 
 /* Reset de fondos de Pico para un look más limpio */
-.cat-card header, .cat-card footer {
+.cat-card footer {
     background: transparent;
     border: none;
-    padding: 10px 15px;
+    padding: 20px 20px;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    margin-top: 0;
+    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 /* Cuerpo centralizado */
@@ -115,7 +118,7 @@
 }
 
 .cat-description i {
-    font-size: 3rem; /* Icono grande y protagonista */
+    font-size: 2rem;
     color: var(--pico-primary);
 }
 
@@ -128,6 +131,14 @@
     margin: 10px;
     padding: 3px;
     background: transparent;
+}
+
+
+form .cat-button{
+    margin: 10px;
+    gap: 25px;
+    padding: 3px;
+    font-size: 13px;
 }
 
 #categories-list:has(form) .cat-card:not(:has(form)) .cat-button {
@@ -156,21 +167,12 @@ body.htmx-request .cat-button {
     font-size: 1.5rem;
 }
 
-/* Formulario de edición: Ajuste de la X */
-.cat-edit-header {
-    justify-content: flex-end; /* Manda la X a la derecha */
-}
-
-.cat-edit-header button {
-    padding: 1px;
-}
-
 /* Dentro de la card de edición, reducimos los espacios de Pico */
 .cat-card form {
     margin: 0;
     height: 100%; /* Ocupa todo el alto del article */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 /* Compactamos los inputs */
@@ -187,24 +189,28 @@ body.htmx-request .cat-button {
 }
 
 /* Ajuste del header y footer del form para que no roben tanto espacio */
-.cat-card form header,
 .cat-card form footer {
     padding: 5px 15px;
-    min-height: 50px;
 }
 
 /* ==========================================
    4. Transactions module
    ========================================== */
 /* Estilos para las tarjetas de transacciones */
+
+
+.transaction-list {
+    min-width: 80%;
+}
 .transaction-card {
-    border-left: 6px solid var(--pico-muted-border-color); /* Borde por defecto */
+    /*border: 2px solid var(--pico-muted-border-color); */
     margin-bottom: 1rem;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     transition: transform 0.2s;
+    min-width: 100%;
 }
 
 .transaction-card:hover {
@@ -212,12 +218,12 @@ body.htmx-request .cat-button {
 }
 
 /* Variaciones por tipo */
-.card-expense {
-    border-left-color: #d32f2f; /* Rojo */
+.card-expense .amount-text{
+    color: #f55f5f; /* Rojo / rosa*/
 }
 
-.card-income {
-    border-left-color: #388e3c; /* Verde */
+.card-income .amount-text{
+    color: #beedc8; /* Verde claro*/
 }
 
 .transaction-header {
@@ -254,7 +260,8 @@ body.htmx-request .cat-button {
 
 .actions {
     display: flex;
-    gap: 1rem;
+    margin: 5px;
+    gap: 1.2rem;
 }
 
 .actions i {
@@ -292,6 +299,13 @@ body.htmx-request .cat-button {
 .amount-category {
     display: flex;
     flex-direction: column;
+}
+
+.transaction-card-buttons {
+
+    margin: 2px;
+    padding: 10px;
+    background: transparent;
 }
 
 .amount-text {
@@ -339,6 +353,18 @@ body.htmx-request .cat-button {
         border-top: 1px solid var(--pico-card-border-color);
         padding-top: 0.5rem;
     }
+
+    .recurring-transaction-action-buttons{
+            justify-content: left;
+        }
+       .recurring-transaction-button{
+            max-width: 70px;
+       }
+
+       .recurring-transaction-badge{
+            text-align: left;
+       }
+
 }
 
 
@@ -490,5 +516,37 @@ print report
 }
 .htmx-request .htmx-indicator {
     display: block;
+}
+
+/* ==========================================
+   RECURRING TRANSACTIONS
+   ========================================== */
+
+   .recurring-card{
+        max-width: 800px;
+   }
+    .recurring-transaction-action-buttons{
+        display: flex;
+        gap: 2rem;
+        justify-content: right;
+    }
+   .recurring-transaction-button{
+        max-width: 70px;
+   }
+
+   .recurring-transaction-badge{
+        text-align: right;
+   }
+
+@media (max-width: 768px) {
+
+    .recurring-transaction-action-buttons{
+            justify-content: left;
+        }
+
+       .recurring-transaction-badge{
+            text-align: left;
+       }
+
 }
 
