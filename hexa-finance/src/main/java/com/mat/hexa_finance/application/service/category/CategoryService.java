@@ -7,11 +7,13 @@ import com.mat.hexa_finance.application.ports.out.category.CheckCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.DeleteCategoryPort;
 import com.mat.hexa_finance.application.ports.out.category.LoadCategoriesPort;
 import com.mat.hexa_finance.application.ports.out.category.SaveCategoryPort;
+import com.mat.hexa_finance.domain.exception.AccessDeniedException;
 import com.mat.hexa_finance.domain.exception.CategoryNotFoundException;
 import com.mat.hexa_finance.domain.model.Category;
-import org.springframework.security.access.AccessDeniedException;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CategoryService implements SaveCategoryUseCase,
         FindAllCategoriesUseCase,
@@ -72,6 +74,6 @@ public class CategoryService implements SaveCategoryUseCase,
 
     @Override
     public List<Category> executeSearch(Long userId) {
-        return loadCategoriesPort.findAllByUserId(userId);
+        return loadCategoriesPort.findAllByUserId(userId).stream().sorted(Comparator.comparing(Category::getName)).collect(Collectors.toList());
     }
 }

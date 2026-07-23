@@ -57,7 +57,7 @@ public class ProfileService implements UpdateUsernameUseCase, UpdateEmailUseCase
         }
 
         if (newPassword.isEmpty() || newPassword.contains(" ")) {
-            throw new BadUsernameException("Bad username");
+            throw new BadUsernameException("Bad password");
         }
 
         foundUser.setPassword(passwordEncoder.encode(newPassword));
