@@ -4,7 +4,7 @@ Especificación Funcional: HexaFinance
     Carga Inicial (GET /dashboard): * Lógica: Calcula LocalDate.now() para obtener mes/año actual. Sumariza transacciones del periodo.
 
         Retorno: Página dashboard.html completa.
-Incluye dos botones prominentes: [+] Gasto/Ingreso y [+] Categoría.
+Incluye dos botones prominentes: [+] transaccion y [+] Categoría.
 
     Acción: Filtro Rápido (GET /dashboard/summary):
 

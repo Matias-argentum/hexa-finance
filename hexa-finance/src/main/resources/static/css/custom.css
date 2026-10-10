@@ -54,8 +54,15 @@
     }
 
     .welcome-buttons-container-div{
+        gap: 3rem;
         margin-top: 2rem;
     }
+
+    .welcome-buttons-container-div{
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
 
 /* ==========================================
    3. CATEGORIES MODULE

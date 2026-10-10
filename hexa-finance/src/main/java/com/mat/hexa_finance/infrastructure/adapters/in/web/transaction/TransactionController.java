@@ -1,9 +1,12 @@
 package com.mat.hexa_finance.infrastructure.adapters.in.web.transaction;
 
 import com.mat.hexa_finance.application.ports.in.category.FindAllCategoriesUseCase;
+import com.mat.hexa_finance.application.ports.in.dashboard.GetDashboardSummaryQuery;
 import com.mat.hexa_finance.application.ports.in.transaction.*;
 import com.mat.hexa_finance.application.ports.in.transaction.command.CreateTransactionCommand;
 import com.mat.hexa_finance.application.ports.in.transaction.command.UpdateTransactionCommand;
+import com.mat.hexa_finance.application.service.dashboard.DashboardSummaryService;
+import com.mat.hexa_finance.domain.model.DashboardSummary;
 import com.mat.hexa_finance.domain.model.Transaction;
 import com.mat.hexa_finance.domain.model.TransactionType;
 import com.mat.hexa_finance.infrastructure.adapters.in.web.auth.model.CustomUserDetails;
@@ -37,18 +40,20 @@ public class TransactionController {
     private final FindAllTransactionsUseCase findAllTransactionsUseCase;
     private final UpdateTransactionUseCase updateTransactionUseCase;
     private final DeleteTransactionUseCase deleteTransactionUseCase;
+    private final DashboardSummaryService dashboardSummaryService;
 
     public TransactionController(FindAllCategoriesUseCase findAllCategoriesUseCase,
                                  SaveTransactionUseCase saveTransactionUseCase,
                                  GetTransactionUseCase getTransactionUseCase,
                                  FindAllTransactionsUseCase findAllTransactionsUseCase,
-                                 UpdateTransactionUseCase updateTransactionUseCase, DeleteTransactionUseCase deleteTransactionUseCase) {
+                                 UpdateTransactionUseCase updateTransactionUseCase, DeleteTransactionUseCase deleteTransactionUseCase, DashboardSummaryService dashboardSummaryService) {
         this.findAllCategoriesUseCase = findAllCategoriesUseCase;
         this.saveTransactionUseCase = saveTransactionUseCase;
         this.getTransactionUseCase = getTransactionUseCase;
         this.findAllTransactionsUseCase = findAllTransactionsUseCase;
         this.updateTransactionUseCase = updateTransactionUseCase;
         this.deleteTransactionUseCase = deleteTransactionUseCase;
+        this.dashboardSummaryService = dashboardSummaryService;
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -65,14 +70,15 @@ public class TransactionController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<Void> createTransaction(
+    public String createTransaction(
             @RequestParam BigDecimal amount,
             @RequestParam String type,
             @RequestParam String description,
             @RequestParam Long categoryId,
             @RequestParam LocalDate date,
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            Model model) {
 
         CreateTransactionCommand command = new CreateTransactionCommand();
         command.setAmount(amount);
@@ -82,11 +88,20 @@ public class TransactionController {
         command.setDate(date);
         command.setUserId(userDetails.getId());
 
-        Transaction savedTransaction = saveTransactionUseCase.execute(command);
+        saveTransactionUseCase.execute(command);
 
+        // Calcular el resumen para el mes de la transacción
+        int year = date.getYear();
+        int month = date.getMonthValue();
+        DashboardSummary summary = dashboardSummaryService.execute(userDetails.getId(), month, year);
 
+        model.addAttribute("username", userDetails.getUsername());
+        model.addAttribute("summary", summary);
+        model.addAttribute("selectedMonth", String.format("%d-%02d", year, month));
+
+        // Envía los eventos para cerrar modal y disparar toast
         HtmxUtils.addNotificationAndClose(response, "Transacción registrada!");
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return "dashboard/dashboard :: dashboard-content";
     }
 
     /*

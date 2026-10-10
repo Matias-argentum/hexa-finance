@@ -1,7 +1,7 @@
 ### --- DOCKER & DATA --- ###
 # Ignoramos la carpeta de datos de MySQL (muy importante para no subir binarios)
 docker/docker/mysql_data/
-# Ignoramos archivos de variables de entorno (por seguridad en la VPS)
+# Ignoramos archivos de variables de entorno
 .env
 *.env
 
@@ -23,3 +23,10 @@ Thumbs.db
 
 ### --- LOGS --- ###
 *.log
+
+.env
+docker/mysql_data/
+docker/docker/
+hexa-finance/target/
+hexa-finance/*.iml
+hexa-finance/pom.xml.versionsBackup

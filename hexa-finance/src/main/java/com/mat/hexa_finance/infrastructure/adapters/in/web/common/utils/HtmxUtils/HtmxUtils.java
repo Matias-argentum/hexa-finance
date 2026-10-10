@@ -17,11 +17,11 @@ public class HtmxUtils {
 
     public static void addNotificationAndClose(HttpServletResponse response, String message) {
         String json = """
-            {
-                "notify": {"message": "%s"},
-                "closeModal": true
-            }
-            """.formatted(message);
+        {
+            "notify": {"message": "%s"},
+            "closeModal": true
+        }
+        """.formatted(message);
         response.setHeader("HX-Trigger", json.trim().replace("\n", ""));
     }
 }

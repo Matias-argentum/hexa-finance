@@ -23,7 +23,7 @@ public class SecurityConfig {
 
                 // las petiiones a endpoint publicos o registro entran, el resto requiere estar autenticado
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/public/**", "/register", "/css/**", "/js/**", "/images/**", "/about", "/error/**")
+                        .requestMatchers("/","/public/**", "/css/**", "/js/**", "/images/**", "/about", "/error/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

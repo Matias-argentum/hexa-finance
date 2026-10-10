@@ -7,6 +7,7 @@ import com.mat.hexa_finance.infrastructure.adapters.in.web.auth.model.CustomUser
 import com.mat.hexa_finance.infrastructure.adapters.in.web.common.utils.HtmxUtils.HtmxUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,13 +42,10 @@ public class AuthController {
         return "layouts/main-layout";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/register")
     public String register(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
-            return "redirect:/";
-        }
 
         model.addAttribute("content", "auth/register");
         return "layouts/main-layout";
@@ -91,6 +89,7 @@ public class AuthController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     @ResponseBody
     public void register(@RequestParam String username,

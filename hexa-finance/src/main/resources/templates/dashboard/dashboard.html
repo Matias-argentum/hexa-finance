@@ -1,6 +1,10 @@
-<section th:fragment="dashboard-content" class="container" id="dashboard-container">
+<section th:fragment="dashboard-content"
+         class="container"
+         id="dashboard-container">
+
     <h2 th:text="'Hola, ' + ${username}">Mi Dashboard</h2>
 
+    <!-- Filtro por mes (el id="month-filter" es leído por hx-include) -->
     <div style="margin-bottom: 2rem;">
         <label for="month-filter">Filtrar por mes y año:</label>
         <input type="month"
@@ -13,31 +17,33 @@
                hx-trigger="change">
     </div>
 
+    <!-- Tarjetas de Resumen -->
     <div class="grid" id="balance-cards">
         <article>
             <header>Ingresos</header>
             <h3 style="color: #beedc8;"
-                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.totalIncome, 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
+                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.totalIncome, 1, 'POINT', 2, 'COMMA') : '$0'}">
             </h3>
         </article>
 
         <article>
             <header>Egresos</header>
             <h3 style="color: #f55f5f;"
-                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.totalExpense, 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
+                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.totalExpense, 1, 'POINT', 2, 'COMMA') : '$0'}">
             </h3>
         </article>
 
         <article>
             <header>Balance Neto</header>
             <h3 th:style="'color: ' + (${summary != null && summary.calculateBalance() >= 0} ? '#beedc8' : '#f55f5f')"
-                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.calculateBalance(), 1, 'POINT', 2, 'COMMA') : '$0'}"></span>
+                th:text="${summary != null ? '$' + #numbers.formatDecimal(summary.calculateBalance(), 1, 'POINT', 2, 'COMMA') : '$0'}">
             </h3>
         </article>
     </div>
 
     <hr>
 
+    <!-- Botones para abrir modales -->
     <div class="grid">
         <button class="outline"
                 hx-get="/categories/new"
