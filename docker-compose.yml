@@ -46,6 +46,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/${MYSQL_DATABASE}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
     depends_on:
       mysql-db:
         condition: service_healthy
