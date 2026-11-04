@@ -25,7 +25,7 @@ Es también un ejercicio de **arquitectura hexagonal** con Spring Boot: el domin
 
 | Pieza | Para qué |
 |---|---|
-| Java `[versión]` + Spring Boot `[versión]` | Aplicación |
+| Java 25 + Spring Boot 4.1.1 | Aplicación |
 | Spring Data JPA / Hibernate | Persistencia |
 | Spring Security | Autenticación y roles |
 | Thymeleaf | Vistas renderizadas en el servidor |
